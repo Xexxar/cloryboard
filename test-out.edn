@@ -1,0 +1,98 @@
+[Events]
+//Background and Video events
+//Storyboard Layer 0 (Background)
+//Storyboard Layer 1 (Fail)
+//Storyboard Layer 2 (Pass)
+//Storyboard Layer 3 (Foreground)
+Sprite,Foreground,Centre,sb/lyrics/29.png,822.0,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/21.png,793.9,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/33.png,773.4,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/67.png,745.7,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/55.png,734.6,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/52.png,723.2,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/59.png,703.1,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/56.png,695.8,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/54.png,685.2,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/55.png,672.0,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/67.png,660.9,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/68.png,637.4,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/63.png,623.8,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/62.png,611.1,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/61.png,598.0,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/72.png,572.5,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/62.png,559.9,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/68.png,546.8,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/65.png,534.7,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/63.png,511.0,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/48.png,497.5,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/67.png,486.1,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/55.png,475.0,155.2
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/70.png,799.5,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/55.png,783.3,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/52.png,771.9,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/61.png,760.1,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/72.png,734.6,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/62.png,722.0,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/68.png,708.9,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/55.png,683.3,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/48.png,669.8,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/69.png,655.9,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/52.png,644.1,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/59.png,624.0,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/62.png,614.6,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/66.png,602.7,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/67.png,592.4,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/72.png,569.4,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/62.png,556.8,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/68.png,543.7,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/65.png,531.6,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/70.png,504.9,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/48.png,488.4,125.6
+ S,,106523,111173,0.2
+Sprite,Foreground,Centre,sb/lyrics/72.png,475.0,125.6
+ S,,106523,111173,0.2
+//Storyboard Layer 4 (Overlay)
+//Storyboard Sound Samples
