@@ -4,7 +4,7 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [cloryboard.common.easings :as easings]
-[cloryboard.functions.movement :as func-movement]
+[cloryboard.functions.move :as func-movement]
             [cloryboard.common.maths :as maths]
             [cloryboard.common.resolver :as ut]
             [clojure.test :as t]

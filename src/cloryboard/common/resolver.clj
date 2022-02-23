@@ -26,9 +26,6 @@
             (get obj :functions)))))
     objects))
 
-
-
-
 (defn- build-fraction-windows
   "Takes a list of fractions and concats them in start end pairs."
   [fractions]
@@ -91,9 +88,6 @@
     (some
       #(and (get-in % [:metadata :discontinous]) (= (get window 0) (get % :start)))
       functions)))
-  ; (contains? (set (mapv
-  ;   #(and (get-in % [:metadata :discontinous]) (= (get window 0) (get % :start)))
-  ;   functions)) true))
 
 (defn get-discontinuous-position
   [functions window]

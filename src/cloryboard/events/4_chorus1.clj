@@ -5,7 +5,8 @@
             [clojure.string :as str]
             [cloryboard.effects.lyrics :as lyrics]
             [cloryboard.functions.common :as func-common]
-            [cloryboard.functions.movement :as func-movement]
+            [cloryboard.functions.move :as func-movement]
+            [cloryboard.effects.particles :as particles]
             [clojure.java.io :as io])
   (:import [java.awt Graphics2D Color Font FontMetrics]
            [java.awt.image BufferedImage]
@@ -62,7 +63,14 @@
      ;  :time {:start 193381 :end 198041}}
 ]))
 
-()
+(def particles
+  (particles/create-effect
+    {:particle-count 100 ;; number of particles initialized
+     :particle-depth-range nil ;; range of depath for effect
+     :particle-scale 0.25
+     :file "sb/dot.png"
+     :time {:start 193381 :end 198041}
+    }))
 
 (defn create-lyrics
   "Generates lyrics partial to the lyric-metadata, skipping manual coding."
@@ -73,5 +81,6 @@
 
 (defn main
   []
-  (create-lyrics lines)
+  [(create-lyrics lines)
+  particles]
 )

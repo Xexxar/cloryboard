@@ -1,4 +1,4 @@
-(ns cloryboard.functions.rotator
+(ns cloryboard.functions.rotate
   (:require []))
 
 (defn rotate-effect

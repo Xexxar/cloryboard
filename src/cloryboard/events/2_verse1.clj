@@ -5,8 +5,9 @@
             [clojure.string :as str]
             [cloryboard.effects.lyrics :as lyrics]
             [cloryboard.functions.common :as func-common]
-            [cloryboard.functions.movement :as func-movement]
-            [clojure.java.io :as io])
+            [cloryboard.functions.move :as func-movement]
+            [clojure.java.io :as io]
+            [cloryboard.effects.particles :as particles])
   (:import [java.awt Graphics2D Color Font FontMetrics]
            [java.awt.image BufferedImage]
            [javax.imageio ImageIO]
@@ -126,5 +127,3 @@
   []
   (create-lyrics lines)
 )
-
-(main)

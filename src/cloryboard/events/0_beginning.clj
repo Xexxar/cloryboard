@@ -5,7 +5,7 @@
             [clojure.string :as str]
             [clojure.java.io :as io]
             [cloryboard.functions.common :as func-common]
-            [cloryboard.functions.movement :as func-movement]
+            [cloryboard.functions.move :as func-movement]
             [cloryboard.common.resolver :as resolver]
             [cloryboard.effects.lyrics :as lyrics])
   (:import [java.awt Graphics2D Color Font FontMetrics]
