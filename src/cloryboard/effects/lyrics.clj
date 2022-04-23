@@ -3,8 +3,7 @@
             [clojure.edn :as edn]
             [clojure.set :as set]
             [cloryboard.common.image :as image]
-            [cloryboard.functions.common :as func-common]
-            [cloryboard.common.resolver :as resolver]
+            [cloryboard.effects.common :as common]
             [clojure.string :as str]
             [clojure.java.io :as io])
   (:import [java.awt Graphics2D Color Font FontMetrics]
@@ -87,25 +86,17 @@
   [line h-offset v-offset time]
   (recursively-build-line [] (mapv #(get letter-data %) line) 0 0 h-offset v-offset time))
 
-(defn initialize-lyrics
-  [metadata]
-  (let [line (get metadata :line)
-        tether (get metadata :tether)
-        position (get metadata :position)
-        align (get metadata :align)
-        scale (get metadata :scale)
-        h-offset (get-in metadata [:text-offsets :h])
-        v-offset (get-in metadata [:text-offsets :v])
-        time (get metadata :time)]
+(defn create-text
+  [parameters]
+  (let [line (get parameters :line)
+        tether (get parameters :tether)
+        position (get parameters :position)
+        align (get parameters :align)
+        scale (get parameters :scale)
+        h-offset (get-in parameters [:text-offsets :h])
+        v-offset (get-in parameters [:text-offsets :v])
+        time (get parameters :time)]
     (-> (build-line line h-offset v-offset time)
         (align-line align)
-        (func-common/scale-effect scale)
-        (func-common/position-effect tether position))))
-
-(defn create-lyrics
-  [metadata]
-  (resolver/resolve-function-timing
-    (resolver/apply-functions-to-objects
-      (initialize-lyrics metadata)
-      (get metadata :functions)
-      (get metadata :metadata))))
+        (common/scale-effect scale)
+        (common/position-effect tether position))))

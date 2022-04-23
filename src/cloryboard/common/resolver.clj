@@ -34,7 +34,7 @@
       [(get fractions ind) (get fractions (inc ind))])
     (range (dec (count fractions)))))
 
-(defn gather-fraction-timing-vector
+(defn- gather-fraction-timing-vector
   "Command that produces all independent fractions in order."
   [functions]
   (vec
@@ -46,13 +46,15 @@
               [(get elm :start) (get elm :end)])
               functions)))))))
 
-(defn gather-active-functions-for-fraction-window
+(defn- gather-active-functions-for-fraction-window
+  "How many functions impact this time window? (needed to grab the delta
+  movement from this period)."
   [functions time-period]
   (filterv
     #(and (<= (get % :start) (get time-period 0)) (>= (get % :end) (get time-period 1)))
     functions))
 
-(defn fractionize?
+(defn- fractionize?
   "Determines whether or not an easing approximation is needed."
   [active-functions window]
   (cond
@@ -67,7 +69,8 @@
     :else
       false))
 
-(defn resolve-movement-delta-for-window
+(defn- resolve-movement-delta-for-window
+  "Find out how much we should have moved during this window."
   [active-functions start end]
   (reduce maths/vec-add
     (mapv
@@ -82,14 +85,17 @@
            (- (* f-end-percent y-movement) (* f-start-percent y-movement))]))
     active-functions)))
 
-(defn discontinuous-function?
+(defn- discontinuous-function?
+  "Checks if function is discontinous, used to keep start position and apply an
+   instantaneous motion (useful for particles resetting to bottom of screen."
   [functions window]
   (some?
     (some
       #(and (get-in % [:metadata :discontinous]) (= (get window 0) (get % :start)))
       functions)))
 
-(defn get-discontinuous-position
+(defn- get-discontinuous-position
+  "Grabs the position of where a discontinous function starts at."
   [functions window]
   (let [disc-func (filterv
                     #(and (get-in % [:metadata :discontinous])
@@ -100,7 +106,8 @@
       (let [args (get-in disc-func [0 :arguments])]
         [(get args 0) (get args 1)]))))
 
-(defn create-m-function-for-window
+(defn- create-m-function-for-window
+  "Sub routine that creates the necessary movement for the sub window."
   [active-functions last-position window]
   (let [e (first (disj (set (mapv #(get % :easing) active-functions)) 0))
         easing (if (nil? e) 0 e)
@@ -114,7 +121,9 @@
                  (maths/sum-vars-ignore-nil (get last-position 0) (get movement-delta 0))
                  (maths/sum-vars-ignore-nil (get last-position 1) (get movement-delta 1))]}))
 
-(defn create-m-functions-for-windows
+(defn- create-m-functions-for-windows
+  "recursive function responsible for manually building out the sub submovements
+  based on existing easing overlaps."
   [active-functions windows last-position acc index]
   (if
     (>= index (count windows))
@@ -137,13 +146,13 @@
                          (maths/sum-vars-ignore-nil (get last-position 1) (get movement-delta 1))]})
           (inc index)))))
 
-(defn movement-easing-fractionizer
+(defn- movement-easing-fractionizer
   "Takes a specific time period and resolves a conflicting easings by breaking
   movement down into linear sub-movements based off the metadata param for the
   minimum effect-fraction. I.E: if you have two conflicting easings from 1/4 to
   3/4, and the min fraction is 1/64, you'll produce 32 submovements."
   [metadata last-position active-functions window]
-  (let [easing-window (get metadata :m-easing)
+  (let [easing-window (if (some? (get metadata :m-easing)) (get metadata :m-easing) 1/64) ;; TODO might want to look at 1/64 being the default or something else, either way ramer optimizes this.
         window-duration (- (get window 1) (get window 0))
         subparts (/ window-duration easing-window)]
     (if (integer? subparts)
@@ -153,7 +162,7 @@
           active-functions sub-windows last-position [] 0))
       (throw (Exception. "I don't want to handle your fractions automatically right now, you have a bad :m-easing-window.. figure it out.")))))
 
-(defn resolve-movement-for-period
+(defn- resolve-movement-for-period
   "Takes acculumator, finds last position, calcs new position, resolves any
   easing conflicts with the easing-fractionizer."
   [metadata last-function active-functions window]
@@ -169,7 +178,7 @@
       :else
         [(create-m-function-for-window active-functions last-position window)])))
 
-(defn grand-movement-resolver
+(defn- grand-movement-resolver
   "Sovereign M function resolver."
   [metadata functions]
   (let [fraction-timing-list (gather-fraction-timing-vector functions)
@@ -184,27 +193,27 @@
             (reduce conj acc (resolve-movement-for-period metadata (last acc) functions-during-window window)))))
       [] time-windows)))
 
-(defn grand-scale-resolver
+(defn- grand-scale-resolver
   "Sovereign S function resolver."
   [metadata functions]
   (identity functions))
 
-(defn grand-vector-scale-resolver
+(defn- grand-vector-scale-resolver
   "Sovereign V function resolver."
   [metadata functions]
   (identity functions))
 
-(defn grand-color-resolver
-  "Sovereign M function resolver."
+(defn- grand-color-resolver
+  "Sovereign C function resolver."
   [metadata functions]
   (identity functions))
 
-(defn grand-rotation-resolver
-  "Sovereign M function resolver."
+(defn- grand-rotation-resolver
+  "Sovereign R function resolver."
   [metadata functions]
   (identity functions))
 
-(defn grand-fade-resolver
+(defn- grand-fade-resolver
   "Sovereign F function resolver."
   [metadata functions]
   (identity functions))
@@ -214,12 +223,12 @@
 ;; Default to effects smallest fraction gap. (1/GCM?)
 
 ; {:F-easing 1/8
- ; :S-easing 1/8} ... etc
+ ; :S-easing 1/8} ... etcMotion
 
 ; {:metadata
 ;   {:discontinous true}} ;; Defines a function that breaks continuity, allowing for discontinuous effects
 
-(defn grand-sovereign-supreme-master-general-resolver
+(defn- grand-sovereign-supreme-master-general-resolver
   "A needlessly long titled function responsible for chronologically and
   systematically interlacing overlapping function calls to produce the natural
   combined effect for each basic function, F, S, M, C, R, V."
@@ -241,8 +250,9 @@
 
 (defn apply-functions-to-objects
   [objects functions metadata]
+  ;; TODO apply ramer to optimize the movements to reduce lines.
   (grand-sovereign-supreme-master-general-resolver
-    (if (contains? metadata :m-easing) metadata {:m-easing 1/16})
+    metadata
     (reduce (fn [acc func] (func acc)) objects functions)))
 
 ; (resolve-function-timing
@@ -293,9 +303,7 @@
 ;   [image-set rotation-routine]
 ;   (let []))
 
-;TODO GRAND RESOLVER CONCEPT
-
-; {:easing-segmentation-count
+; {:easing-segmentation-countmetadata
 ;  :rotation-segmentation-count}
 
 ; okay so grand-resolver needs to fractionalize the movements into all submovements,

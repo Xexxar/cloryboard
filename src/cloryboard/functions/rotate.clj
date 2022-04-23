@@ -1,7 +1,13 @@
 (ns cloryboard.functions.rotate
-  (:require []))
+  (:require [cloryboard.common.maths :as maths]
+            [cloryboard.functions.common :as common]))
+
+(defn rotate
+  "Applies a rotation to each object."
+  []
+  )
 
 (defn rotate-effect
-  "Dynamically rotates any effect!!! I am a complicated magic function."
+  "Applies a rotation to each object around a point."
   []
   )

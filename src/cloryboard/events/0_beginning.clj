@@ -4,14 +4,10 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [clojure.java.io :as io]
-            [cloryboard.functions.common :as func-common]
-            [cloryboard.functions.move :as func-movement]
-            [cloryboard.common.resolver :as resolver]
-            [cloryboard.effects.lyrics :as lyrics])
-  (:import [java.awt Graphics2D Color Font FontMetrics]
-           [java.awt.image BufferedImage]
-           [javax.imageio ImageIO]
-           [java.io File]))
+            [cloryboard.common.effects :as effects]
+            [cloryboard.effects.lyrics :as lyrics]
+            [cloryboard.functions.fade :as fade]
+            [cloryboard.functions.move :as move]))
 
 (def hand-commands
   [{:filepath "bg.jpg"
@@ -28,7 +24,7 @@
     :type "Sprite"
     :layer "Foreground"
     :tether "Centre"
-    :position [320 200]
+    :position [320 150]
     :functions [{:function "S"
                  :start 6253
                  :end 20653
@@ -37,6 +33,26 @@
                 {:function "F"
                  :start 6253
                  :end 10453
+                 :easing 17
+                 :arguments [0 1]}
+                {:function "F"
+                 :start 15853
+                 :end 20653
+                 :easing 17
+                 :arguments [1 0]}]}
+   {:filepath "sb/iam.png"
+    :type "Sprite"
+    :layer "Foreground"
+    :tether "Centre"
+    :position [320 320]
+    :functions [{:function "S"
+                 :start 6253
+                 :end 20653
+                 :easing 0
+                 :arguments [0.2]}
+                {:function "F"
+                 :start 10453
+                 :end 15853
                  :easing 17
                  :arguments [0 1]}
                 {:function "F"
@@ -66,62 +82,52 @@
                  :arguments [0 1]}]}])
 
 (def lines
-  {:iam
-    {:line "I AM"
-     :position [320 300]
-     :time {:start 11053 :end 20653}
-     :text-offsets {:h 50 :v 0}
-     :align "Centre"
-     :tether "Centre"
-     :scale 0.3
-     :functions [(partial func-common/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 1/2 :fade-out-end 1 :fade-out-easing 1})]}
-   :xexxar-1
+  [{:effect lyrics/create-text
+    :effect-parameters
     {:line "Beatmap & Storyboard\nby\nXexxar"
      :position [500 300]
      :time {:start 20653 :end 30253}
      :text-offsets {:h 10 :v 5}
      :align "Centre"
      :tether "Centre"
-     :scale 0.15
-     :functions [(partial func-common/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]}
-   ; :xexxar-2
-   ;  {:line "he who must decrease"}
-   :foss
+     :scale 0.15}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]
+    :metadata {:optimizer-epsilon-base 1}}
+   {:effect lyrics/create-text
+    :effect-parameters
     {:line "Hitsounds\nby\nfoss"
      :position [320 380]
      :time {:start 20653 :end 30253}
      :text-offsets {:h 10 :v 5}
      :align "Centre"
      :tether "Centre"
-     :scale 0.15
-     :functions [(partial func-common/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]}
-   :oli
+     :scale 0.15}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]
+    :metadata {}}
+   {:effect lyrics/create-text
+    :effect-parameters
     {:line "Alpha & Omega Sliders\nby\nOliBomby"
      :position [140 300]
      :time {:start 20653 :end 30253}
      :text-offsets {:h 10 :v 5}
      :align "Centre"
      :tether "Centre"
-     :scale 0.15
-     :functions [(partial func-common/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]}
-   :god
+     :scale 0.15}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]
+    :metadata {}}
+   {:effect lyrics/create-text
+    :effect-parameters
     {:line "For His Glory Alone"
      :position [320 100]
      :time {:start 20653 :end 30253}
      :text-offsets {:h 10 :v 5}
      :align "Centre"
      :tether "Centre"
-     :scale 0.15
-     :functions [(partial func-common/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]}})
-
-(defn create-lyrics
-  "Generates lyrics partial to the lyric-metadata, skipping manual coding."
-  [line-metadata]
-  (reduce (fn [acc elm]
-    (into acc (lyrics/create-lyrics (get elm 1))))
-      [] line-metadata))
+     :scale 0.15}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]
+    :metadata {}}])
 
 (defn main
   []
   [hand-commands
-   (create-lyrics lines)])
+   (effects/create-effects lines)])
