@@ -9,11 +9,11 @@
   [{:start (get parameters :start)
     :function "M"
     :easing (get parameters :easing)
-    :end (get parameters :easing)
-    :arguments (if (= (count :arguments) 2)
+    :end (get parameters :end)
+    :arguments (if (= (count (get parameters :arguments)) 2)
                 [0 0 (get-in parameters [:arguments 0]) (get-in parameters [:arguments 1])]
                 [(get-in parameters [:arguments 0]) (get-in parameters [:arguments 1]) (get-in parameters [:arguments 2]) (get-in parameters [:arguments 3])])
-    :metadata (if (= (count :arguments) 2) {:discontinous false} {:discontinous true})}]
+    :metadata (if (= (count (get parameters :arguments)) 2) {:discontinous false} {:discontinous true})}]
     objects))
 
 (defn scatter-objects-from-position
@@ -53,8 +53,8 @@
 				(let [rng (rand 1)]
         [{:start (get parameters :start)
           :function "M"
-          :easing (get parameters :start)
-          :end (get parameters :start)
+          :easing (get parameters :easing)
+          :end (get parameters :end)
           :arguments [0 0 (* rng (get-in parameters [:arguments 0])) (* rng (get-in parameters [:arguments 1]))]}]))
     	objects)
 		objects))

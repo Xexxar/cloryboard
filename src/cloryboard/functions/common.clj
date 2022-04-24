@@ -20,9 +20,10 @@
   [vector-of-effects objects]
   (reduce
     (fn [acc index]
-      (assoc (get objects index) :functions
-        (reduce conj (get-in vector-of-effects index :functions)
-          (get vector-of-effects index))))
+			(conj acc
+      	(assoc (get objects index) :functions
+        	(reduce conj (get-in objects [index :functions])
+          	(get vector-of-effects index)))))
     []
     (range (count objects))))
 
