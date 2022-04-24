@@ -25,10 +25,10 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 0 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})
-								(partial move/move {:easing 17 :arguments [0 -100] :start 0 :end 1})
-								(partial move/move {:easing 16 :arguments [-100 0] :start 0 :end 1/4})
-								(partial move/move {:easing 17 :arguments [200 0] :start 1/4 :end 3/4})
-								(partial move/move {:easing 15 :arguments [-100 0] :start 3/4 :end 1})]
+                (partial move/move {:easing 17 :arguments [0 -100] :start 0 :end 1})
+                (partial move/move {:easing 16 :arguments [-100 0] :start 0 :end 1/4})
+                (partial move/move {:easing 17 :arguments [200 0] :start 1/4 :end 3/4})
+                (partial move/move {:easing 15 :arguments [-100 0] :start 3/4 :end 1})]
 		:metadata {:m-easing 1/32}}
 	 {:effect lyrics/create-text
  		:effect-parameters
@@ -40,8 +40,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-								(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]
 		:metadata {}}
 	 {:effect lyrics/create-text
  		:effect-parameters
@@ -53,8 +53,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 0 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-								(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})]}
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})]}
 	 {:effect lyrics/create-text
  		:effect-parameters
     {:line "The incorruptible foundation \nthat the wise man builds upon"
@@ -65,8 +65,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-								(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]
 		:metadata {}}
 	 {:effect lyrics/create-text
  		:effect-parameters
@@ -78,8 +78,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-		 						(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-		 						(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
 	 {:effect lyrics/create-text
  		:effect-parameters
     {:line "I am the bounty on the table \nin the palace at the feast"
@@ -90,8 +90,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-								(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
 	 {:effect lyrics/create-text
  		:effect-parameters
     {:line "I am the rain upon the earth \nafter a scorching drought"
@@ -102,8 +102,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
-								(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]}
 	 {:effect lyrics/create-text
  		:effect-parameters
     {:line "I am the quenching of the thirst \nyou never thought you'd be without"
@@ -114,14 +114,14 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 4 :arguments [0 -140] :start 1 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 1 :end 9/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [-80 -80] :start 9/8 :end 10/8})
-								(partial move/move {:easing 4 :arguments [40 40] :start 9/8 :end 10/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [200 -200] :start 10/8 :end 11/8})
-								(partial move/move {:easing 4 :arguments [-100 100] :start 10/8 :end 11/8})
-								(partial move/move-random-percent-of-movement {:easing 0 :arguments [-200 -200] :start 11/8 :end 12/8})
-								(partial move/move {:easing 4 :arguments [100 100] :start 11/8 :end 12/8})
-								(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 12/8 :fade-out-easing 6})]}])
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 1 :end 9/8})
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [-80 -80] :start 9/8 :end 10/8})
+                (partial move/move {:easing 4 :arguments [40 40] :start 9/8 :end 10/8})
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [200 -200] :start 10/8 :end 11/8})
+                (partial move/move {:easing 4 :arguments [-100 100] :start 10/8 :end 11/8})
+                (partial move/move-random-percent-of-movement {:easing 0 :arguments [-200 -200] :start 11/8 :end 12/8})
+                (partial move/move {:easing 4 :arguments [100 100] :start 11/8 :end 12/8})
+                (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 12/8 :fade-out-easing 6})]}])
 
 ;
 (defn main
