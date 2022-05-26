@@ -17,7 +17,7 @@
     objects))
 
 (defn scatter-objects-from-position
-  "Moves a set of objects"
+  "Moves a set of objects away from a target :position"
   [parameters objects]
   (common/apply-to-objects-sequentially
     (mapv

@@ -26,207 +26,213 @@
             (get obj :functions)))))
     objects))
 
-(defn- build-fraction-windows
-  "Takes a list of fractions and concats them in start end pairs."
-  [fractions]
-  (mapv
-    (fn [ind]
-      [(get fractions ind) (get fractions (inc ind))])
-    (range (dec (count fractions)))))
-
-(defn- gather-fraction-timing-vector
-  "Command that produces all independent fractions in order."
-  [functions]
-  (vec
-    (sort
-      (filterv some?
-        (into #{}
-          (reduce into
-            (mapv (fn [elm]
-              [(get elm :start) (get elm :end)])
-              functions)))))))
-
-(defn- gather-active-functions-for-fraction-window
-  "How many functions impact this time window? (needed to grab the delta
-  movement from this period)."
-  [functions time-period]
-  (filterv
-    #(and (<= (get % :start) (get time-period 0)) (>= (get % :end) (get time-period 1)))
-    functions))
-
-(defn- fractionize?
-  "Determines whether or not an easing approximation is needed."
-  [active-functions window]
-  (cond
-    (< 1 (count (disj (set (mapv #(get % :easing) active-functions)) 0)))
-      true
-    (not ;; if you exist, then we need fractionalize
-      (empty?
-        (filterv ;; does your start stop time differ from the window?
-          #(or (not= (get % :start) (get window 0)) (not= (get % :end) (get window 1)))
-          (filterv #(not= (get % :easing) 0) active-functions)))) ;; for non linear-easings
-      true
-    :else
-      false))
-
-(defn- resolve-movement-delta-for-window
-  "Find out how much we should have moved during this window."
-  [active-functions start end]
-  (reduce maths/vec-add
-    (mapv
-      (fn [function]
-        (let [easing (get function :easing)
-              easing-duration (- (get function :end) (get function :start))
-              f-start-percent (easings/easing-to-value easing (/ (- start (get function :start)) easing-duration))
-              f-end-percent (easings/easing-to-value easing (/ (- end (get function :start)) easing-duration))
-              x-movement (- (get-in function [:arguments 2]) (get-in function [:arguments 0]))
-              y-movement (- (get-in function [:arguments 3]) (get-in function [:arguments 1]))]
-          [(- (* f-end-percent x-movement) (* f-start-percent x-movement))
-           (- (* f-end-percent y-movement) (* f-start-percent y-movement))]))
-    active-functions)))
-
-(defn- discontinuous-function?
-  "Checks if function is discontinous, used to keep start position and apply an
-   instantaneous motion (useful for particles resetting to bottom of screen."
-  [functions window]
-  (some?
-    (some
-      #(and (get-in % [:metadata :discontinous]) (= (get window 0) (get % :start)))
-      functions)))
-
-(defn- get-discontinuous-position
-  "Grabs the position of where a discontinous function starts at."
-  [functions window]
-  (let [disc-func (filterv
-                    #(and (get-in % [:metadata :discontinous])
-                          (= (get window 0) (get % :start)))
-                    functions)]
-    (if (< 1 (count disc-func))
-      (throw (Exception. "Two discontinuous functions on the same window, cannot resolve start position for movement."))
-      (let [args (get-in disc-func [0 :arguments])]
-        [(get args 0) (get args 1)]))))
-
-(defn- create-m-function-for-window
-  "Sub routine that creates the necessary movement for the sub window."
-  [active-functions last-position window]
-  (let [e (first (disj (set (mapv #(get % :easing) active-functions)) 0))
-        easing (if (nil? e) 0 e)
-        movement-delta (resolve-movement-delta-for-window active-functions (get window 0) (get window 1))]
-    {:function "M"
-     :start (get window 0)
-     :end (get window 1)
-     :easing easing
-     :arguments [(get last-position 0)
-                 (get last-position 1)
-                 (maths/sum-vars-ignore-nil (get last-position 0) (get movement-delta 0))
-                 (maths/sum-vars-ignore-nil (get last-position 1) (get movement-delta 1))]}))
-
-(defn- create-m-functions-for-windows
-  "recursive function responsible for manually building out the sub submovements
-  based on existing easing overlaps."
-  [active-functions windows last-position acc index]
-  (if
-    (>= index (count windows))
-      acc
-      (let [movement-delta (resolve-movement-delta-for-window active-functions
-                                                              (get-in windows [index 0])
-                                                              (get-in windows [index 1]))]
-        (create-m-functions-for-windows
-          active-functions
-          windows
-          (maths/vec-add last-position movement-delta)
-          (conj acc
-            {:function "M"
-             :start (get-in windows [index 0])
-             :end (get-in windows [index 1])
-             :easing 0
-             :arguments [(get last-position 0)
-                         (get last-position 1)
-                         (maths/sum-vars-ignore-nil (get last-position 0) (get movement-delta 0))
-                         (maths/sum-vars-ignore-nil (get last-position 1) (get movement-delta 1))]})
-          (inc index)))))
-
-(defn- movement-easing-fractionizer
-  "Takes a specific time period and resolves a conflicting easings by breaking
-  movement down into linear sub-movements based off the metadata param for the
-  minimum effect-fraction. I.E: if you have two conflicting easings from 1/4 to
-  3/4, and the min fraction is 1/64, you'll produce 32 submovements."
-  [metadata last-position active-functions window]
-  (let [easing-window (if (some? (get metadata :m-easing)) (get metadata :m-easing) 1/64) ;; TODO might want to look at 1/64 being the default or something else, either way ramer optimizes this.
-        window-duration (- (get window 1) (get window 0))
-        subparts (/ window-duration easing-window)]
-    (if (integer? subparts)
-      (let [times (conj (mapv #(maths/sum-vars-ignore-nil (get window 0) (* % easing-window)) (range subparts)) (get window 1))
-            sub-windows (build-fraction-windows times)]
-        (create-m-functions-for-windows
-          active-functions sub-windows last-position [] 0))
-      (throw (Exception. "I don't want to handle your fractions automatically right now, you have a bad :m-easing-window.. figure it out.")))))
-
-(defn- resolve-movement-for-period
-  "Takes acculumator, finds last position, calcs new position, resolves any
-  easing conflicts with the easing-fractionizer."
-  [metadata last-function active-functions window]
-  (let [lp (vec (rest (rest (get last-function :arguments))))
-        last-position (if (empty? lp) (get metadata :position) lp)]
-    (cond
-      (and (fractionize? active-functions window) (discontinuous-function? active-functions window))
-        (movement-easing-fractionizer metadata (get-discontinuous-position active-functions) active-functions window)
-      (fractionize? active-functions window)
-        (movement-easing-fractionizer metadata last-position active-functions window)
-      (discontinuous-function? active-functions window)
-        [(create-m-function-for-window active-functions (get-discontinuous-position active-functions) window)]
+(defn- reduce-functions-to-last-absolute-reset
+  "I filter down your active functions to only those active after the last
+  'absolute reset' which is when your arguments polarity is = 'x' where 'x' is
+  the full :arguments length of a :function. otherwise I return the entire
+  functions list."
+  [functions polarity]
+  (let [last-pol (last (filter #(= polarity (count (get % :arguments))) functions))]
+    (if (nil? last-pol)
+      functions
+      (reduce (fn [acc elm]
+        (if
+          (or (= elm last-pol) (not (empty? acc)))
+            (conj acc elm)
+            acc))
+        []
+        functions))))
+f
+(defn- calc-percent-elapsed
+  "Give me an effect and a time and I'll calculate the percent elapsed based on
+  the easing used. Range is [0 1]."
+  [effect time]
+  (let [start (get effect :start)
+        end (get effect :end)]
+    (cond ;; yeah I could just clamp (/ (- time start) end). This is full retard mode.
+      (<= end time)
+        1
+      (<= time start)
+        0
       :else
-        [(create-m-function-for-window active-functions last-position window)])))
+        ((easings/easings (get effect :easing)) (/ (- time start) end)))))
 
-(defn- grand-movement-resolver
-  "Sovereign M function resolver."
+(defn- movement-resolver-function
+  "Takes every active function and the time and calculates the end position at
+  time"
+  [functions time start-value]
+  (let [polarity 4]
+    (reduce
+      (fn [acc elm]
+        (let [args (get elm :arguments)
+              percent (calc-percent-elapsed elm time)]
+          (if (= polarity (count args))
+            (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1))]
+                           [(* percent (get args 2)) (* percent (get args 3))])
+            (maths/vec-add acc args))))
+    start-value
+    (reduce-functions-to-last-absolute-reset functions polarity)))
+
+(defn- fade-scale-resolver-function
+  "Takes every active function and the time and calculates the scale or fade at
+   time"
+  [functions time start-value]
+  (let [polarity 2]
+    (reduce
+      (fn [acc elm]
+        (let [args (get elm :arguments)
+              percent (calc-percent-elapsed elm time)]
+          (if (= polarity (count args))
+            (maths/vec-add [(* (- 1 percent) (get args 0))]
+                           [(* percent (get args 1))])
+            (maths/vec-multiply-vectors acc args))))
+    start-value
+    (reduce-functions-to-last-absolute-reset functions polarity))))
+
+(defn- vectorscale-resolver-function
+  "Takes every active function and the time and calculates the vectorscale at
+   time"
+  [functions time start-value]
+  (let [polarity 4]
+    (reduce
+      (fn [acc elm]
+        (let [args (get elm :arguments)
+              percent (calc-percent-elapsed elm time)]
+          (if (= polarity (count args))
+            (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1))]
+                           [(* percent (get args 2)) (* percent (get args 3))])
+            (maths/vec-multiply-vectors acc args))))
+    start-value
+    (reduce-functions-to-last-absolute-reset functions polarity))))
+
+(defn- color-resolver-function
+  "Takes every active function and the time and calculates the color multiplier
+   at time"
+  [functions time start-value]
+  (let [polarity 6]
+    (reduce
+      (fn [acc elm]
+        (let [args (get elm :arguments)
+              percent (calc-percent-elapsed elm time)]
+          (if (= polarity (count args))
+            (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1)) (* (- 1 percent) (get args 2))]
+                           [(* percent (get args 3)) (* percent (get args 4)) (* percent (get args 5))])
+            (maths/vec-multiply-vectors acc args))))
+    start-value
+    (reduce-functions-to-last-absolute-reset functions polarity))))
+
+(defn- rotation-resolver-function
+  "Takes every active function and the time and calculates the rotation at time"
+  [functions time start-value]
+  (let [polarity 2]
+    (reduce
+      (fn [acc elm]
+        (let [args (get elm :arguments)
+              percent (calc-percent-elapsed elm time)]
+          (if (= polarity (count args))
+            (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1)) (* (- 1 percent) (get args 2))]
+                           [(* percent (get args 3)) (* percent (get args 4)) (* percent (get args 5))])
+            (maths/vec-add acc args))))
+    start-value
+    (reduce-functions-to-last-absolute-reset functions polarity))))
+
+;; okay positionally resetting effects are viewed as chronologically bound to
+;; functional order within the :function list, meaning that if I have a movement
+;; function listed after a positionally resetting movement, i would apply the
+;; new effect's net movement on the positional reset, moving the reset in time.
+;; Basically, resets are only overwriting the previous functions. they themselves
+;; can be overwritten by new functions
+
+(defn- get-start-value
+  "Gets the start value for the specific effect. Position for 'M', etc..."
+  [object effect]
+  (cond
+    (= "F" effect)
+      [1.0]
+    (= "S" effect)
+      [1.0]
+    (= "C" effect)
+      [1.0 1.0 1.0]
+    (= "V" effect)
+      [1.0 1.0]
+    (= "R" effect)
+      [0.0]
+    (= "M" effect)
+      (get object :position)))
+
+(defn- calc-current-effect-at-time
+  "I am a utility function that is provided a 'resolver-function' which allows
+  me to process any 'function-type' since the function is provided by previous
+  call. I assume you have reduced the functions list to only the specific
+  effect you want, otherwise I'll blow up :^). I'm engine specific code and if
+  you're messing with me you're probably having a bad time anyway."
+  [object time effect effect-function]
+  (let [active-functions (filterv #(<= (get % :start) time) (get object :functions))
+        start-value (get-start-value object effect)]
+    (if
+      (empty? active-functions)
+        start-value
+        (effect-function active-functions time start-value))))
+
+(defn get-current-effect-value
+  "Got an object you want to know the current effect value at a specific time?
+  Say no more fam. I will handle which resolver-function you need and will do
+  the necessary calculations."
+  [object time effect]
+  (let [functions (filterv #(= effect (get % :function)) (get object :functions))]
+    (cond
+      (nil? functions)
+        []
+      (= "M" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "M"
+          movement-resolver-function)
+      (= "R" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "R"
+          rotation-resolver-function)
+      (= "S" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "S"
+          fade-scale-resolver-function)
+      (= "C" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "C"
+          color-resolver-function)
+      (= "F" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "F"
+          fade-scale-resolver-function)
+      (= "V" effect)
+        (calc-current-effect-at-time
+          (assoc object :functions functions)
+          time
+          "V"
+          vectorscale-resolver-function))))
+
+
+
+(defn- grand-resolver
+  "Generic handler for any function group that resolves a block of functions
+  with different easings into a single stream of form compliant functions."
   [metadata functions]
-  (let [fraction-timing-list (gather-fraction-timing-vector functions)
-        time-windows (if (> (count fraction-timing-list) 1)
-                      (build-fraction-windows fraction-timing-list)
-                      [[0 1]])] ;; If theres only 1 time stamp or less for this function, assume whole duration.
-    (reduce ;; Rebuild functions based off time-windows.
-      (fn [acc window]
-        (let [functions-during-window (gather-active-functions-for-fraction-window functions window)]
-          (if (empty? functions-during-window)
-            acc
-            (reduce conj acc (resolve-movement-for-period metadata (last acc) functions-during-window window)))))
-      [] time-windows)))
-
-(defn- grand-scale-resolver
-  "Sovereign S function resolver."
-  [metadata functions]
-  (identity functions))
-
-(defn- grand-vector-scale-resolver
-  "Sovereign V function resolver."
-  [metadata functions]
-  (identity functions))
-
-(defn- grand-color-resolver
-  "Sovereign C function resolver."
-  [metadata functions]
-  (identity functions))
-
-(defn- grand-rotation-resolver
-  "Sovereign R function resolver."
-  [metadata functions]
-  (identity functions))
-
-(defn- grand-fade-resolver
-  "Sovereign F function resolver."
-  [metadata functions]
-  (identity functions))
-
-;; I need meta information for this resolving, particularly, I need to know the
-;; level of desired easing approximation by fraction...
-;; Default to effects smallest fraction gap. (1/GCM?)
-
-; {:F-easing 1/8
- ; :S-easing 1/8} ... etcMotion
-
-; {:metadata
-;   {:discontinous true}} ;; Defines a function that breaks continuity, allowing for discontinuous effects
+  (let [effect (get-in functions [0 :function])]
+    (cond
+      (nil? effect) ;; function isn't being used.
+        functions
+      (= "M" effect)
+        (resolve-function metadata functions
+          )))))
 
 (defn- grand-sovereign-supreme-master-general-resolver
   "A needlessly long titled function responsible for chronologically and
@@ -248,73 +254,36 @@
            (grand-vector-scale-resolver metadata (get function-groups "V"))]))))
     objects))
 
+
+;; general notation. Any arguments map that contains half the arguments is a 'delta' vector.
+
+;; S = [0.5]: reduce scale by 50%
+;; M = [100 100]: move sprite by vectors coords
+;; F = [0.5]: reduce current fade by 50%
+;; R = [pi]: rotate image by +pi
+;; V = [0.5 2]: scale image X by 50%, scale image Y by 100%
+;; C = [0 -0.5 1]: multiplies the current C value by the decimal used, rounding up.
+
+;; any argument map that contains full arguments is a discontinuous movement.
+;; S = [0.75 0.5]: snap scale to 0.75, reduce scale to 50%
+;; M = [200 100 200 100]: snap sprite back to [200 200], then move to [100 100] vectors coords
+;; F = [0.5 0.75]: snap fade to 50%, raise to 75%.
+;; R = [pi 0]: snap rotation to pi, rotate back to 0.
+;; V = [0.5 1 2 1]: snap image to 0.5, 2.0 scale, and move back to 1:1.
+;; C = [1 1 1 1 1 0]: reduce color yellow
+
+;; when considering M,
+;; First I need to take functions and interlace them into their 'effective' movement.
+;; once I have that effective movement, then I can resolve those 'effective' movements
+;; into actual movements, then optimize.
+
+;; when considering S, F, R
+;; F and S are multiplicative changes.
+
 (defn apply-functions-to-objects
   [objects functions metadata]
+  ;; TODO apply loop optimizer to loop commands that can be looped. (fun alg)
   ;; TODO apply ramer to optimize the movements to reduce lines.
   (grand-sovereign-supreme-master-general-resolver
     metadata
     (reduce (fn [acc func] (func acc)) objects functions)))
-
-; (resolve-function-timing
-; [  {:type "Sprite",
-;    :filepath "sb/lyrics/48.png",
-;    :metadata {:start 107053, :end 111853},
-;    :tether "Centre",
-;    :functions
-;    [{:function "S", :start 0, :easing 0, :end 1, :arguments [0.15]}
-;     {:function "F", :start 0, :end 1/8, :easing 1, :arguments [0 1]}
-;     {:function "F", :start 7/8, :end 1, :easing 1, :arguments [1 0]}],
-;    :layer "Foreground",
-;    :position [449.63750000000005 411.475]}
-;   {:type "Sprite",
-;    :filepath "sb/lyrics/72.png",
-;    :metadata {:start 107053, :end 111853},
-;    :tether "Centre",
-;    :functions
-;    [{:function "S", :start 0, :easing 0, :end 1, :arguments [0.15]}
-;     {:function "F", :start 0, :end 1/8, :easing 1, :arguments [0 1]}
-;     {:function "F", :start 7/8, :end 1, :easing 1, :arguments [1 0]}],
-;    :layer "Foreground",
-;    :position [461.1875 411.475]}])
-
-;
-; (defn resolve-overlapping-effects
-;   "Granddaddy function responsible for handling an interlaced effect. Think
-;   _these objects are already in motion, but i want to add an additional movement
-;   to this moving effect to make it more shpecial & unique_ ... its designed to
-;   handle movement primarily,
-;   but can deal with any interlacing effects."
-;   [old functions]
-;   ())
-;
-; ;; Sample im    (let [out (ut/grand-sovereign-supreme-master-general-resolver {:m-easing 1/32} movement-test-input)])))
-
-; (def [{}{}{}{}]
-;
-; ;; Sample rotation-routine
-;
-; (def sample-rotation-routine
-;   [{:center {:x 320 :y 240}
-;     :easing 0
-;     :quantization 6
-;     :angle-delta 90}])
-;
-; (defn apply-rotation-routine-to-image-set
-;   [image-set rotation-routine]
-;   (let []))
-
-; {:easing-segmentation-countmetadata
-;  :rotation-segmentation-count}
-
-; okay so grand-resolver needs to fractionalize the movements into all submovements,
-;  then fractionalize any easings and handle the position at each fraction state.
-; |...|...|...|...|...|...|...|...|...|...| :easing 1
-; |.........|.........|.........|.........| :easing 1
-; ->
-; |...|...|.|.|...|...|...|...|.|.|...|...| :easing 1 ;for ex.
-;
-; Movement: Use movement resolver to find position at each |.
-;
-; Fade: use same system, but apply multiplication to resolve fade value at |
-;
-; Rotate: Rotation resolver to find rotate at time.

@@ -60,7 +60,7 @@
     {:line "The incorruptible foundation \nthat the wise man builds upon"
      :position [320 400]
      :time {:start 121453 :end 126253}
-     :text-offsets {:h 15 :v 5}
+     :text-offsets {:h 15 :v 50}
      :align "Centre"
      :tether "Centre"
      :scale 0.15}
