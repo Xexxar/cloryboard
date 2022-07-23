@@ -45,6 +45,10 @@
     #(+ (get vec1 %) (get vec2 %))
     (range (count vec1))))
 
+(defn vec-distance
+  [vec1]
+  (Math/sqrt (reduce (fn [acc elm] (+ acc (* elm elm))) 0 vec1)))
+
 (defn get-center-position
   [objects]
   (let [max-height (reduce (fn [acc k] (if (< acc (get-in k [:position 1])) (get-in k [:position 1]) acc)) -1000000 objects)

@@ -237,9 +237,8 @@
   "Figures out what movements are needed by the window"
   [metadata object resolver-function window effect]
   (let [active-functions (filterv #(<= (get % :start) (get window 1)) (get object :functions))
-        window-functions (filterv #(and (<= (get % :start) (get window 1))  (>= (get % :end) (get window 0))) (get object :functions))
+        window-functions (filterv #(and (< (get % :start) (get window 1))  (> (get % :end) (get window 0))) (get object :functions))
         start-value (get-start-value object effect)
-        _ (print window)
         non-linear-easings (filterv #(not= (get % :easing) 0) window-functions)]
     (if
       (<= (count non-linear-easings) 1)
@@ -305,8 +304,7 @@
   (mapv
     (fn [object]
       (assoc object :functions
-      (let [function-groups (group-by :function (get object :functions))
-           ]; _ (print object)]
+      (let [function-groups (group-by :function (get object :functions))]
         (reduce into
           [(grand-resolver metadata (assoc object :functions (get function-groups "M")) "M")
            (grand-resolver metadata (assoc object :functions (get function-groups "F")) "F")

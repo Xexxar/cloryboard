@@ -38,7 +38,7 @@
     (fn [particle]
       {:type "Sprite"
        :filepath file
-       :metadata time
+       :parameters time
        :tether "Centre"
        :layer "Foreground"
        :position [(- (* 854 (rand 1)) 107) (* 480 (rand 1))]
@@ -53,15 +53,13 @@
   [particle-count particle-scale particle-scale-range particle-depth-range file time]
   nil)
 
-(defn initialize-effect
-  [metadata]
-  (let [particle-count (get metadata :particle-count)
-        particle-scale (get metadata :particle-scale)
-        particle-scale-range (get metadata :particle-scale-range)
-        particle-depth-range (get metadata :particle-depth-range)
-        file (get metadata :file)
-        time (get metadata :time)
-        three-dimensional? (some? :particle-depth-range)]
+(defn create-particles
+  [parameters]
+  (let [particle-count (get parameters :particle-count)
+        particle-scale (get parameters :particle-scale)
+        particle-scale-range (get parameters :particle-scale-range)
+        file (get parameters :file)
+        time (get parameters :time)]
     ; (if three-dimensional?
     ;   ; (generate-three-dimensional-particles
     ;   ;   particle-count
@@ -76,11 +74,3 @@
         particle-scale-range
         file
         time)))
-
-(defn create-effect
-  [metadata]
-  (resolver/resolve-function-timing
-    (resolver/apply-functions-to-objects
-      (initialize-effect metadata)
-      (get metadata :functions)
-      (get metadata :metadata))))
