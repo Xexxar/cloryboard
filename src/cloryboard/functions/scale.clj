@@ -18,7 +18,6 @@
   "Scales the effect from the provided :position relative to arguments. This
 	assumes a :argument value."
   [parameters objects]
-	(let [objects]
 	(move/scatter-objects-from-position
 		parameters
   	(common/apply-to-all-objects

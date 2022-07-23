@@ -29,13 +29,21 @@
   [scaler vector]
   (mapv #(* scaler %) vector))
 
+(defn vec-multiply-vectors
+  [vector v-scalers]
+  (mapv #(* (get vector %) (get v-scalers %)) (range (dec (count vector)))))
+
 (defn vec-subtract
-  [pos1 pos2]
-  [(- (get pos1 0) (get pos2 0)) (- (get pos1 1) (get pos2 1))])
+  [vec1 vec2]
+  (mapv
+    #(- (get vec1 %) (get vec2 %))
+    (range (count vec1))))
 
 (defn vec-add
-  [pos1 pos2]
-  [(+ (get pos1 0) (get pos2 0)) (+ (get pos1 1) (get pos2 1))])
+  [vec1 vec2]
+  (mapv
+    #(+ (get vec1 %) (get vec2 %))
+    (range (count vec1))))
 
 (defn get-center-position
   [objects]

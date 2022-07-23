@@ -40,7 +40,7 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial move/move {:easing 18 :arguments [0 -120] :start 0 :end 9/8})
-                (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
+                ; (partial move/move-random-percent-of-movement {:easing 0 :arguments [0 -20] :start 0 :end 9/8})
                 (partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 9/8 :fade-out-easing 1})]
 		:metadata {}}
 	 {:effect lyrics/create-text
@@ -60,7 +60,7 @@
     {:line "The incorruptible foundation \nthat the wise man builds upon"
      :position [320 400]
      :time {:start 121453 :end 126253}
-     :text-offsets {:h 15 :v 5}
+     :text-offsets {:h 15 :v 50}
      :align "Centre"
      :tether "Centre"
      :scale 0.15}

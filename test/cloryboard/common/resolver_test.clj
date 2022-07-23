@@ -4,7 +4,6 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [cloryboard.common.easings :as easings]
-[cloryboard.functions.move :as func-movement]
             [cloryboard.common.maths :as maths]
             [cloryboard.common.resolver :as ut]
             [clojure.test :as t]
@@ -58,21 +57,6 @@
   (t/testing "Grand Sovereign Mover."
     (let [out (ut/grand-sovereign-supreme-master-general-resolver {:m-easing 1/32} movement-test-input)])))
 
-(pp/pprint (ut/grand-sovereign-supreme-master-general-resolver {:m-easing 1/16} movement-test-input))
-
-(pp/pprint (ut/grand-sovereign-supreme-master-general-resolver {:m-easing 1/16} (edn/read-string (slurp "target/wtf.edn")))))
-
-
-(pp/pprint
-(ut/grand-sovereign-supreme-master-general-resolver {:m-easing 1/16}
-(reduce (fn [acc func] (func acc))
-  movement-test-input
-  [(partial func-movement/move {:easing 0 :movement [0 -1000000] :start 0 :end 1})
-   (partial func-movement/move {:easing 0 :movement [0 1000000] :start 0 :end 1})]
-)))
-
-(pp/pprint (ut/apply-functions-to-objects
-    (edn/read-string (slurp "target/wtf.edn"))
-    [(partial func-movement/move {:easing 0 :movement [0 -1000000] :start 0 :end 1})
-     (partial func-movement/move {:easing 0 :movement [0 1000000] :start 0 :end 1})]
-nil))
+(t/deftest movement-function-resolver-test
+  (t/testing "Grand Sovereign Mover."
+    (t/is [0 0] (get-current-effect-value (get movement-test-input 0) 1/2))))
