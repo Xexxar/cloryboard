@@ -7,7 +7,8 @@
             [cloryboard.common.effects :as effects]
             [cloryboard.effects.lyrics :as lyrics]
             [cloryboard.functions.fade :as fade]
-            [cloryboard.functions.move :as move]))
+            [cloryboard.functions.move :as move]
+            [cloryboard.common.resolver :as resolver]))
 
 (def hand-commands
   [{:filepath "bg.jpg"
@@ -125,7 +126,8 @@
      :tether "Centre"
      :scale 0.15}
     :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 6})]
-    :metadata {}}])
+    :metadata {}}
+    ])
 
 (defn main
   []

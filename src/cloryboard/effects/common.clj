@@ -29,6 +29,6 @@
                    :start 0/1
                    :easing 0
                    :end 1/1
-                   :arguments [scale]})
-        (update-in [:position] (fn [x] new-position))))
+                   :arguments [scale scale]})
+        (assoc-in [:position] new-position)))
     objects)))

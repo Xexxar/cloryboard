@@ -26,7 +26,7 @@
       (+ (* 60000 min) (* 1000 sec) mil))))
 
 (defn vec-multiply
-  [vector scaler]
+  [scaler vector]
   (mapv #(* scaler %) vector))
 
 (defn vec-multiply-vectors
@@ -37,13 +37,13 @@
   [vec1 vec2]
   (mapv
     #(- (get vec1 %) (get vec2 %))
-    (range (dec (count vec1)))))
+    (range (count vec1))))
 
 (defn vec-add
   [vec1 vec2]
   (mapv
     #(+ (get vec1 %) (get vec2 %))
-    (range (dec (count vec1)))))
+    (range (count vec1))))
 
 (defn get-center-position
   [objects]

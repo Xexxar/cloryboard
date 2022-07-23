@@ -42,7 +42,7 @@
             acc))
         []
         functions))))
-f
+
 (defn- calc-percent-elapsed
   "Give me an effect and a time and I'll calculate the percent elapsed based on
   the easing used. Range is [0 1]."
@@ -55,7 +55,7 @@ f
       (<= time start)
         0
       :else
-        ((easings/easings (get effect :easing)) (/ (- time start) end)))))
+        ((easings/easings (get effect :easing)) (/ (- time start) (- end start))))))
 
 (defn- movement-resolver-function
   "Takes every active function and the time and calculates the end position at
@@ -69,9 +69,9 @@ f
           (if (= polarity (count args))
             (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1))]
                            [(* percent (get args 2)) (* percent (get args 3))])
-            (maths/vec-add acc args))))
-    start-value
-    (reduce-functions-to-last-absolute-reset functions polarity)))
+            (maths/vec-add acc [(* percent (get args 0)) (* percent (get args 1))]))))
+      start-value
+      (reduce-functions-to-last-absolute-reset functions polarity))))
 
 (defn- fade-scale-resolver-function
   "Takes every active function and the time and calculates the scale or fade at
@@ -85,7 +85,7 @@ f
           (if (= polarity (count args))
             (maths/vec-add [(* (- 1 percent) (get args 0))]
                            [(* percent (get args 1))])
-            (maths/vec-multiply-vectors acc args))))
+            (maths/vec-multiply-vectors acc [(* percent (get args 0))]))))
     start-value
     (reduce-functions-to-last-absolute-reset functions polarity))))
 
@@ -101,7 +101,7 @@ f
           (if (= polarity (count args))
             (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1))]
                            [(* percent (get args 2)) (* percent (get args 3))])
-            (maths/vec-multiply-vectors acc args))))
+            (maths/vec-multiply-vectors acc [(* percent (get args 0)) (* percent (get args 1))]))))
     start-value
     (reduce-functions-to-last-absolute-reset functions polarity))))
 
@@ -117,7 +117,7 @@ f
           (if (= polarity (count args))
             (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1)) (* (- 1 percent) (get args 2))]
                            [(* percent (get args 3)) (* percent (get args 4)) (* percent (get args 5))])
-            (maths/vec-multiply-vectors acc args))))
+            (maths/vec-multiply-vectors acc [(* percent (get args 0)) (* percent (get args 1)) (* percent (get args 2))]))))
     start-value
     (reduce-functions-to-last-absolute-reset functions polarity))))
 
@@ -130,18 +130,11 @@ f
         (let [args (get elm :arguments)
               percent (calc-percent-elapsed elm time)]
           (if (= polarity (count args))
-            (maths/vec-add [(* (- 1 percent) (get args 0)) (* (- 1 percent) (get args 1)) (* (- 1 percent) (get args 2))]
-                           [(* percent (get args 3)) (* percent (get args 4)) (* percent (get args 5))])
-            (maths/vec-add acc args))))
+            (maths/vec-add [(* (- 1 percent) (get args 0))]
+                           [(* percent (get args 1))])
+            (maths/vec-add acc [(* percent (get args 0))]))))
     start-value
     (reduce-functions-to-last-absolute-reset functions polarity))))
-
-;; okay positionally resetting effects are viewed as chronologically bound to
-;; functional order within the :function list, meaning that if I have a movement
-;; function listed after a positionally resetting movement, i would apply the
-;; new effect's net movement on the positional reset, moving the reset in time.
-;; Basically, resets are only overwriting the previous functions. they themselves
-;; can be overwritten by new functions
 
 (defn- get-start-value
   "Gets the start value for the specific effect. Position for 'M', etc..."
@@ -220,19 +213,89 @@ f
           "V"
           vectorscale-resolver-function))))
 
+(defn- build-fraction-windows
+  "Takes a list of fractions and concats them in start end pairs."
+  [fractions]
+  (mapv
+    (fn [ind]
+      [(get fractions ind) (get fractions (inc ind))])
+    (range (dec (count fractions)))))
 
+(defn- gather-fraction-timing-vector
+  "Command that produces all independent fractions in order."
+  [functions]
+  (vec
+    (sort
+      (filterv some?
+        (into #{}
+          (reduce into
+            (mapv (fn [elm]
+              [(get elm :start) (get elm :end)])
+              functions)))))))
+
+(defn- sub-resolver
+  "Figures out what movements are needed by the window"
+  [metadata object resolver-function window effect]
+  (let [active-functions (filterv #(<= (get % :start) (get window 1)) (get object :functions))
+        window-functions (filterv #(and (<= (get % :start) (get window 1))  (>= (get % :end) (get window 0))) (get object :functions))
+        start-value (get-start-value object effect)
+        _ (print window)
+        non-linear-easings (filterv #(not= (get % :easing) 0) window-functions)]
+    (if
+      (<= (count non-linear-easings) 1)
+      [{:function effect
+        :easing (if (= (count non-linear-easings) 1) (get-in non-linear-easings [0 :easing]) 0)
+        :start (get window 0)
+        :end (get window 1)
+        :arguments (reduce conj (resolver-function active-functions (get window 0) start-value)
+                                (resolver-function active-functions (get window 1) start-value))}]
+      (reduce
+        (fn [acc window]
+          (conj acc
+            {:function effect
+             :easing 0
+             :start (get window 0)
+             :end (get window 1)
+             :arguments (reduce conj (resolver-function active-functions (get window 0) start-value)
+                                     (resolver-function active-functions (get window 1) start-value))}))
+          []
+          (let [easing-window 1/128 ;; TODO might want to look at 1/64 being the default or something else, either way ramer optimizes this.
+                window-duration (- (get window 1) (get window 0))
+                subparts (/ window-duration easing-window)
+                times (if (integer? subparts) (conj (mapv #(maths/sum-vars-ignore-nil (get window 0) (* % easing-window)) (range subparts)) (get window 1)))
+                sub-windows (build-fraction-windows times)]
+            sub-windows
+                )))))
 
 (defn- grand-resolver
   "Generic handler for any function group that resolves a block of functions
   with different easings into a single stream of form compliant functions."
-  [metadata functions]
-  (let [effect (get-in functions [0 :function])]
-    (cond
-      (nil? effect) ;; function isn't being used.
-        functions
-      (= "M" effect)
-        (resolve-function metadata functions
-          )))))
+  [metadata object effect]
+  (let [resolver-function (cond
+                            (= "M" effect)
+                              movement-resolver-function
+                            (= "R" effect)
+                              rotation-resolver-function
+                            (= "S" effect)
+                              fade-scale-resolver-function
+                            (= "C" effect)
+                              color-resolver-function
+                            (= "F" effect)
+                              fade-scale-resolver-function
+                            (= "V" effect)
+                              vectorscale-resolver-function)
+        fraction-timing-list (gather-fraction-timing-vector (get object :functions))
+        time-windows (if (> (count fraction-timing-list) 1)
+                      (build-fraction-windows fraction-timing-list)
+                      [[0 1]])]
+    (if (not (empty? (get object :functions)))
+      (reduce
+        (fn [acc window]
+          (reduce conj acc
+            (sub-resolver metadata object resolver-function window effect)))
+         []
+         time-windows)
+         [])))
 
 (defn- grand-sovereign-supreme-master-general-resolver
   "A needlessly long titled function responsible for chronologically and
@@ -242,16 +305,15 @@ f
   (mapv
     (fn [object]
       (assoc object :functions
-      (let [function-groups (group-by :function (get object :functions))]
+      (let [function-groups (group-by :function (get object :functions))
+           ]; _ (print object)]
         (reduce into
-          [(grand-movement-resolver
-            (assoc metadata :position (get object :position))
-            (get function-groups "M"))
-           (grand-fade-resolver metadata (get function-groups "F"))
-           (grand-scale-resolver metadata (get function-groups "S"))
-           (grand-rotation-resolver metadata (get function-groups "R"))
-           (grand-color-resolver metadata (get function-groups "C")) ;; I hope I never have to use this.
-           (grand-vector-scale-resolver metadata (get function-groups "V"))]))))
+          [(grand-resolver metadata (assoc object :functions (get function-groups "M")) "M")
+           (grand-resolver metadata (assoc object :functions (get function-groups "F")) "F")
+           (grand-resolver metadata (assoc object :functions (get function-groups "S")) "S")
+           (grand-resolver metadata (assoc object :functions (get function-groups "R")) "R")
+           (grand-resolver metadata (assoc object :functions (get function-groups "C")) "C")
+           (grand-resolver metadata (assoc object :functions (get function-groups "V")) "V")]))))
     objects))
 
 
@@ -287,3 +349,7 @@ f
   (grand-sovereign-supreme-master-general-resolver
     metadata
     (reduce (fn [acc func] (func acc)) objects functions)))
+
+
+;; Resolvers job is to return the actual movement data.
+;; Resolver has to resolve each of the
