@@ -61,6 +61,27 @@
                  :end 20653
                  :easing 17
                  :arguments [1 0]}]}
+   {:filepath "sb/cross-alone-purewhite.png"
+    :type "Sprite"
+    :layer "Foreground"
+    :tether "Centre"
+    :position [320 200]
+    :functions [{:function "S"
+                 :start 20653
+                 :end 30253
+                 :easing 0
+                 :arguments [0.25]}
+                {:function "F"
+                 :start 20653
+                 :end 21853
+                 :easing 17
+                 :arguments [0 1]}
+                {:function "F"
+                 :start 28453
+                 :end 30253
+                 :easing 17
+                 :arguments [1 0]}]}
+
    {:filepath "sb/glow.png"
     :type "Sprite"
     :layer "Foreground"

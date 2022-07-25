@@ -12,75 +12,62 @@
            [javax.imageio ImageIO]
            [java.io File]))
 
-;;NOTE Here is the explanation of this effect.
-;; We want to create a feeling of volume with this particle effect. Meaning, I
-;; don't want to just use a single layer and scale randomly, I want the density
-;; to feel real. Meaning, you provide me a the following structure, and I lay
-;; out the particles to match a realistic density. (more small particles, few
-;; large ones).
-
-;; For depth, we are assuming a
-
-; {:particle-count 0 ;; number of particles initialized
-;  :particle-depth-range [] ;; range of depth for effect
-;  :particle-scale 0
-;  :file ""
-;  :time {:start 0 :end 1}
-; }
+; ;;NOTE Here is the explanation of this effect.
+; ;; We want to create a feeling of volume with this particle effect. Meaning, I
+; ;; don't want to just use a single layer and scale randomly, I want the density
+; ;; to feel real. Meaning, you provide me a the following structure, and I lay
+; ;; out the particles to match a realistic density. (more small particles, few
+; ;; large ones).
 ;
-; (def screen-coordinates
-;   [[-160 800][0 480]])
-
+; ;; For depth, we are assuming a
+;
+; ; {:particle-count 0 ;; number of particles initialized
+; ;  :particle-depth-range [] ;; range of depth for effect
+; ;  :particle-scale 0
+; ;  :file ""
+; ;  :time {:start 0 :end 1}
+; ; }
+; ;
+; ; (def screen-coordinates
+; ;   [[-160 800][0 480]])
+;
 ;; Guess I can try random first?
-(defn generate-two-dimensional-particles
-  [particle-count particle-scale particle-scale-range file time]
+(defn generate-particles
+  [p-count scale-range coords time files time]
   (mapv
     (fn [particle]
       {:type "Sprite"
-       :filepath file
+       :filepath (get files (int (rand (count files))))
        :metadata time
        :tether "Centre"
        :layer "Foreground"
-       :position [(- (* 854 (rand 1)) 107) (* 480 (rand 1))]
+       :position [(+ (* (- (get-in coords [1 0]) (get-in coords [0 0])) (rand 1)) (get-in coords [0 0]))
+                  (+ (* (- (get-in coords [1 1]) (get-in coords [0 1])) (rand 1)) (get-in coords [0 1]))]
        :functions [{:function "S"
                     :start 0
                     :end 1
                     :easing 0
-                    :arguments [particle-scale]}]})
-    (range particle-count)))
+                    :arguments (let [scale (+ (get scale-range 0) (* (- (get scale-range 1) (get scale-range 0)) (rand 1)))]
+                              [scale scale])}]})
+    (range p-count)))
+;
+; (defn generate-three-dimensional-particles
+;   [particle-count particle-scale particle-scale-range particle-depth-range file time]
+;   nil)
 
-(defn generate-three-dimensional-particles
-  [particle-count particle-scale particle-scale-range particle-depth-range file time]
-  nil)
 
-(defn initialize-effect
-  [metadata]
-  (let [particle-count (get metadata :particle-count)
-        particle-scale (get metadata :particle-scale)
-        particle-scale-range (get metadata :particle-scale-range)
-        particle-depth-range (get metadata :particle-depth-range)
-        file (get metadata :file)
-        time (get metadata :time)
-        three-dimensional? (some? :particle-depth-range)]
-    ; (if three-dimensional?
-    ;   ; (generate-three-dimensional-particles
-    ;   ;   particle-count
-    ;   ;   particle-scale
-    ;   ;   particle-scale-range
-    ;   ;   particle-depth-range
-    ;   ;   file
-    ;   ;   time)
-      (generate-two-dimensional-particles
-        particle-count
-        particle-scale
-        particle-scale-range
-        file
+;; NOTE: coords [[-107 0] [747 480]] is full screen
+(defn create-box-of-particles
+  [parameters]
+  (let [p-count (get parameters :count)
+        scale-range (get parameters :scale-range)
+        files (get parameters :files)
+        time (get parameters :time)
+        coords (get parameters :coords)]
+      (generate-particles
+        p-count
+        scale-range
+        coords
+        time
+        files
         time)))
-
-(defn create-effect
-  [metadata]
-  (resolver/resolve-function-timing
-    (resolver/apply-functions-to-objects
-      (initialize-effect metadata)
-      (get metadata :functions)
-      (get metadata :metadata))))

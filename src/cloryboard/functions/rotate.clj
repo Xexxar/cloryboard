@@ -20,3 +20,18 @@
   "Applies a rotation to each object around a point."
   []
   )
+
+
+(defn rotate-with-restriction
+  "Rotates a set of objects with a :restriction fn that acts on the object"
+  [parameters objects]
+  (common/apply-to-objects-sequentially
+    (mapv
+      (fn [object]
+        [{:start (get parameters :start)
+          :function "R"
+          :easing (get parameters :easing)
+          :end (get parameters :end)
+          :arguments ((get parameters :restriction) object parameters)}])
+      objects)
+      objects))

@@ -27,11 +27,6 @@
     []
     (range (count objects))))
 
-(defn get-current-effect-value-at-time
-	"Stupid function thats needed to get the current effect at a time. Needed to
-	calculate effects that depend on current value."
-	[object time-fraction]
-	)
 
 ; (defn apply-function-specific-random-time-delay
 ;   "Provide a :filter-function that specifies which functions this time delay
