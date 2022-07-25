@@ -12,65 +12,62 @@
            [javax.imageio ImageIO]
            [java.io File]))
 
-;;NOTE Here is the explanation of this effect.
-;; We want to create a feeling of volume with this particle effect. Meaning, I
-;; don't want to just use a single layer and scale randomly, I want the density
-;; to feel real. Meaning, you provide me a the following structure, and I lay
-;; out the particles to match a realistic density. (more small particles, few
-;; large ones).
-
-;; For depth, we are assuming a
-
-; {:particle-count 0 ;; number of particles initialized
-;  :particle-depth-range [] ;; range of depth for effect
-;  :particle-scale 0
-;  :file ""
-;  :time {:start 0 :end 1}
-; }
+; ;;NOTE Here is the explanation of this effect.
+; ;; We want to create a feeling of volume with this particle effect. Meaning, I
+; ;; don't want to just use a single layer and scale randomly, I want the density
+; ;; to feel real. Meaning, you provide me a the following structure, and I lay
+; ;; out the particles to match a realistic density. (more small particles, few
+; ;; large ones).
 ;
-; (def screen-coordinates
-;   [[-160 800][0 480]])
-
+; ;; For depth, we are assuming a
+;
+; ; {:particle-count 0 ;; number of particles initialized
+; ;  :particle-depth-range [] ;; range of depth for effect
+; ;  :particle-scale 0
+; ;  :file ""
+; ;  :time {:start 0 :end 1}
+; ; }
+; ;
+; ; (def screen-coordinates
+; ;   [[-160 800][0 480]])
+;
 ;; Guess I can try random first?
-(defn generate-two-dimensional-particles
-  [particle-count particle-scale particle-scale-range file time]
+(defn generate-particles
+  [p-count scale-range coords time files time]
   (mapv
     (fn [particle]
       {:type "Sprite"
-       :filepath file
-       :parameters time
+       :filepath (get files (int (rand (count files))))
+       :metadata time
        :tether "Centre"
        :layer "Foreground"
-       :position [(- (* 854 (rand 1)) 107) (* 480 (rand 1))]
+       :position [(+ (* (- (get-in coords [1 0]) (get-in coords [0 0])) (rand 1)) (get-in coords [0 0]))
+                  (+ (* (- (get-in coords [1 1]) (get-in coords [0 1])) (rand 1)) (get-in coords [0 1]))]
        :functions [{:function "S"
                     :start 0
                     :end 1
                     :easing 0
-                    :arguments [particle-scale]}]})
-    (range particle-count)))
+                    :arguments (let [scale (+ (get scale-range 0) (* (- (get scale-range 1) (get scale-range 0)) (rand 1)))]
+                              [scale scale])}]})
+    (range p-count)))
+;
+; (defn generate-three-dimensional-particles
+;   [particle-count particle-scale particle-scale-range particle-depth-range file time]
+;   nil)
 
-(defn generate-three-dimensional-particles
-  [particle-count particle-scale particle-scale-range particle-depth-range file time]
-  nil)
 
-(defn create-particles
+;; NOTE: coords [[-107 0] [747 480]] is full screen
+(defn create-box-of-particles
   [parameters]
-  (let [particle-count (get parameters :particle-count)
-        particle-scale (get parameters :particle-scale)
-        particle-scale-range (get parameters :particle-scale-range)
-        file (get parameters :file)
-        time (get parameters :time)]
-    ; (if three-dimensional?
-    ;   ; (generate-three-dimensional-particles
-    ;   ;   particle-count
-    ;   ;   particle-scale
-    ;   ;   particle-scale-range
-    ;   ;   particle-depth-range
-    ;   ;   file
-    ;   ;   time)
-      (generate-two-dimensional-particles
-        particle-count
-        particle-scale
-        particle-scale-range
-        file
+  (let [p-count (get parameters :count)
+        scale-range (get parameters :scale-range)
+        files (get parameters :files)
+        time (get parameters :time)
+        coords (get parameters :coords)]
+      (generate-particles
+        p-count
+        scale-range
+        coords
+        time
+        files
         time)))

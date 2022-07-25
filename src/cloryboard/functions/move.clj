@@ -69,6 +69,18 @@
     	objects)
 		objects))
 
-(defn move-up-continually
-  "Moves an effect"
-  [])
+(defn move-continuously
+  "Moves all objects in a direction and when any object goes offscreen it
+  restarts from the opposite edge."
+  [parameters objects]
+  (common/apply-to-objects-sequentially
+    (mapv
+      (fn [object]
+				(let [rng (rand 1)]
+        [{:start (get parameters :start)
+          :function "M"
+          :easing (get parameters :easing)
+          :end (get parameters :end)
+          :arguments [(* rng (get-in parameters [:arguments 0])) (* rng (get-in parameters [:arguments 1]))]}]))
+    	objects)
+		objects))
