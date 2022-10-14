@@ -37,13 +37,9 @@
         "\n")))))
 
 (defn convert-object-to-output
-  [layer index acc]
-  (let [object (get layer index)]
-    (if (nil? object)
-      acc
-      (convert-object-to-output layer (inc index)
-        (str acc
-          (str/join "," [(get object :type)
+  [layer object]
+  (str 
+  		(str/join "," [(get object :type)
                          (get object :layer)
                          (get object :tether)
                          (get object :filepath)
@@ -51,14 +47,18 @@
                          (get-in object [:position 1])])
         "\n"
         (convert-function-to-output (get object :functions) 0 ""
-        ))))))
+        )))
 
 (defn convert-layer-to-output
   [layers index]
   (let [layer (get layers index)]
     (if (nil? layer)
       nil
-      (convert-object-to-output layer 0 ""))))
+      (reduce
+      	(fn [acc elm]
+      		(str acc
+      				(convert-object-to-output layer elm)))
+      	"" layer))))
 
 (defn output-storyboard
   "Functionally this is the main method to convert a raw .edn SB to .osb"

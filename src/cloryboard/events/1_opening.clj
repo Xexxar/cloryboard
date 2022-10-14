@@ -27,7 +27,12 @@
                   :start 30253,
                   :easing 0,
                   :end 640173,
-                  :arguments [0.6]}]}
+                  :arguments [0.6]}
+                 {:function "F",
+                  :start 315906,
+                  :easing 17,
+                  :end 320566,
+                  :arguments [1, 0]}]}
   {:filepath "sb/lightning1.png"
    :type "Sprite"
    :layer "Background"
@@ -179,20 +184,6 @@
               :end 67453,
               :arguments [1 0]}]}])
 
-(def particles
-  [{:effect particles/create-box-of-particles
-    :effect-parameters
-    {:count 200
-     :scale-range [0.25 0.25]
-     :files ["sb/dot.png"]
-     :time  {:start 30253 :end 35053}
-     :coords [[-107 0] [747 480]]}
-    :functions (reduce into (mapv (fn [k] [(partial move/move {:easing 5 :arguments [0 -10] :start (* k 6/4) :end (+ 3/4 (* k 6/4))})
-                      (partial move/move {:easing 5 :arguments [0 10] :start (+ 3/4 (* k 6/4)) :end (+ 6/4 (* k 6/4))})])
-                (range 100)))}])
-
-
 (defn main
   []
-  [hand-commands
-   (effects/create-effects particles)])
+  [hand-commands])
