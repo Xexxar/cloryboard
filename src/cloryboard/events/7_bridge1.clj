@@ -994,19 +994,14 @@
    ])
 
 (def particles
-  [{:effect particles/create-box-of-particles
+  [{:effect particles/create-particle-routine
     :effect-parameters
     {:count 200
-     :scale-range [0.25 0.25]
+     :scale-range [0.25 1]
      :files ["sb/dot.png"]
      :time  {:start 320566 :end 347048}
-     :coords [[-107 0] [747 520]]}
-    :functions (conj
-    													(mapv #(if (odd? %)
-    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1/2) :arguments [0 40]}) 
-    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1/2) :arguments [0 -40]}))
-    																								(range 9))
-    													(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1}))}])
+     :movements [{:easing 0 :start 0 :end 4.5 :argument [5000 10000]}]}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1})]}])
 
 (defn main
   []

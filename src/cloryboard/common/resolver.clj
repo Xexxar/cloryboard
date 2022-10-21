@@ -163,7 +163,7 @@
   effect you want, otherwise I'll blow up :^). I'm engine specific code and if
   you're messing with me you're probably having a bad time anyway."
   [object time effect effect-function]
-  (let [active-functions (filterv #(<= (get % :start) time) (get object :functions))
+  (let [active-functions (filterv #(< (get % :start) time) (get object :functions))
         start-value (get-start-value object effect)]
     (if
       (empty? active-functions)
