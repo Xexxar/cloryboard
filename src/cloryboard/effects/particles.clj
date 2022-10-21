@@ -85,21 +85,13 @@
   [box pos]
   (cond
     (<= (get pos 0) (get-in box [0 0])) ;; off on left side
-
     		[(- 1 (get-in box [1 0])) (get pos 1)]
-
     (<= (get pos 1) (get-in box [0 1])) ;; above box
-
     		[(get pos 0) (+ 1 (get-in box [1 1]))] 
-
     (<= (get-in box [1 0]) (get pos 0)) ;; off on right side
-
     		[(+ 1 (get-in box [0 0])) (get pos 1)]
-
     (<= (get-in box [1 1]) (get pos 1)) ;; below box
-
     		[(get pos 0) (- 1 (get-in box [0 1]))]
-
       ))
 
 (defn get-particle-scale
