@@ -32,3 +32,6 @@
                    :arguments [scale scale]})
         (assoc-in [:position] new-position)))
     objects)))
+
+; (defn copy-effect-objects-at-time
+; 	)

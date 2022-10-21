@@ -15,14 +15,17 @@
     (fn [obj] ;;for object in objects
       (let [start (get-in obj [:metadata :start])
             end (get-in obj [:metadata :end])
-            duration (- end start)]
+            duration (- end start)
+            bypasses (get-in obj [:metadata :bypasses])]
         (assoc obj :functions
           (mapv
             (fn [f] ;;for functions in object
               (let [time-delta (get-in f [:metadata :time-delta])]
-              (-> f
+              	(if (contains? bypasses (get f :function))
+              		f
+              		(-> f
                   (update :start (fn [frac] (if (some? frac) (int (maths/sum-vars-ignore-nil start (* frac duration) time-delta)) nil)))
-                  (update :end (fn [frac] (if (some? frac) (int (maths/sum-vars-ignore-nil start (* frac duration) time-delta)) nil))))))
+                  (update :end (fn [frac] (if (some? frac) (int (maths/sum-vars-ignore-nil start (* frac duration) time-delta)) nil)))))))
             (get obj :functions)))))
     objects))
 
@@ -160,7 +163,7 @@
   effect you want, otherwise I'll blow up :^). I'm engine specific code and if
   you're messing with me you're probably having a bad time anyway."
   [object time effect effect-function]
-  (let [active-functions (filterv #(<= (get % :start) time) (get object :functions))
+  (let [active-functions (filterv #(< (get % :start) time) (get object :functions))
         start-value (get-start-value object effect)]
     (if
       (empty? active-functions)
@@ -236,7 +239,7 @@
 (defn- sub-resolver
   "Figures out what movements are needed by the window"
   [metadata object resolver-function window effect]
-  (let [active-functions (filterv #(<= (get % :start) (get window 1)) (get object :functions))
+  (let [active-functions (filterv #(< (get % :start) (get window 1)) (get object :functions))
         window-functions (filterv #(and (< (get % :start) (get window 1))  (> (get % :end) (get window 0))) (get object :functions))
         start-value (get-start-value object effect)
         non-linear-easings (filterv #(not= (get % :easing) 0) window-functions)]
@@ -304,14 +307,21 @@
   (mapv
     (fn [object]
       (assoc object :functions
-      (let [function-groups (group-by :function (get object :functions))]
+      (let [function-groups (group-by :function (get object :functions))
+      						bypasses (get object [:metadata :bypasses])]
         (reduce into
-          [(grand-resolver metadata (assoc object :functions (get function-groups "M")) "M")
-           (grand-resolver metadata (assoc object :functions (get function-groups "F")) "F")
-           (grand-resolver metadata (assoc object :functions (get function-groups "S")) "S")
-           (grand-resolver metadata (assoc object :functions (get function-groups "R")) "R")
-           (grand-resolver metadata (assoc object :functions (get function-groups "C")) "C")
-           (grand-resolver metadata (assoc object :functions (get function-groups "V")) "V")]))))
+          [(if (contains? bypasses "M") (get function-groups "M")
+            (grand-resolver metadata (assoc object :functions (get function-groups "M")) "M"))
+           (if (contains? bypasses "F") (get function-groups "F")
+            (grand-resolver metadata (assoc object :functions (get function-groups "F")) "F"))
+           (if (contains? bypasses "S") (get function-groups "S")
+            (grand-resolver metadata (assoc object :functions (get function-groups "S")) "S"))
+           (if (contains? bypasses "R") (get function-groups "R")
+            (grand-resolver metadata (assoc object :functions (get function-groups "R")) "R"))
+           (if (contains? bypasses "C") (get function-groups "C")
+            (grand-resolver metadata (assoc object :functions (get function-groups "C")) "C"))
+           (if (contains? bypasses "V") (get function-groups "V")
+            (grand-resolver metadata (assoc object :functions (get function-groups "V")) "V"))]))))
     objects))
 
 

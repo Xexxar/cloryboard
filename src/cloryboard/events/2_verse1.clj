@@ -5,6 +5,7 @@
             [clojure.string :as str]
             [cloryboard.common.effects :as effects]
             [cloryboard.effects.lyrics :as lyrics]
+            [cloryboard.effects.spectrum :as spectrum]
             [cloryboard.functions.fade :as fade]
             [cloryboard.functions.move :as move]
             [cloryboard.functions.restrictions :as restrict]
@@ -15,6 +16,16 @@
            [java.awt.image BufferedImage]
            [javax.imageio ImageIO]
            [java.io File]))
+
+(def spectrum
+  [{:effect spectrum/create-volume-effect
+  	 :effect-parameters 
+  	   {:image "sb/circle.png"
+  	    :scale 2
+  	    :easing 0
+  	    :position [320 170]
+  	    :fraction 1/640
+  	    :time {:start 107053 :end 155053}}}])
 
 (def lyrics
   [{:effect lyrics/create-text
@@ -128,5 +139,6 @@
 ;
 (defn main
   []
-  [(effects/create-effects lyrics)]
+  [(effects/create-effects spectrum)
+   (effects/create-effects lyrics)	]
 )

@@ -11,6 +11,13 @@
 ;  :functions
 ;  :metadata}
 
+(defn create-effects-simple
+  [effects]
+  (reduce (fn [acc elm]
+    (into acc ((get elm :effect) (get elm :effect-parameters))))
+    []
+    effects))
+
 
 (defn create-effect
   [effect]
