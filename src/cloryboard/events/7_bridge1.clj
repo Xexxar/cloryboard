@@ -42,7 +42,27 @@
                  :start 386359
                  :end 387186
                  :easing 9
-                 :arguments [0.25 2]}]}])
+                 :arguments [0.25 2]}]}
+  {:filepath "sb/cover.jpg"
+    :type "Sprite"
+    :layer "Foreground"
+    :tether "Centre"
+    :position [128 256]
+    :functions [{:function "F"
+                 :start 325531
+                 :end 327186
+                 :easing 4
+                 :arguments [0 1]}
+                {:function "S"
+                 :start 325531
+                 :end 340428
+                 :easing 1
+                 :arguments [0.525]}
+                {:function "F"
+                 :start 338772
+                 :end 340428
+                 :easing 3
+                 :arguments [1 0]}]}])
 
 (def left-line1
 		[{:start 0
@@ -891,6 +911,86 @@
      :line "Wherefore it is written,\n\"God opposes the proud but gives grace to the humble.\"\nJames 4:6"
      :time {:start 320566 :end 323876}}
     :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/2 :fade-in-easing 1 :fade-out-start 1/1 :fade-out-end 3/2 :fade-out-easing 1})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [500 200]
+     :text-offsets {:h 15 :v 100}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.2
+     :line "Theocracy - I AM"
+     :time {:start 327186 :end 330497}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start -1/2 :fade-in-end 0 :fade-in-easing 4 :fade-out-start 14/4 :fade-out-end 4 :fade-out-easing 3})]}  
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [500 230]
+     :text-offsets {:h 15 :v 100}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.1
+     :line "first track from the album"
+     :time {:start 327186 :end 330497}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start -1/2 :fade-in-end 0 :fade-in-easing 4 :fade-out-start 14/4 :fade-out-end 4 :fade-out-easing 3})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [500 292]
+     :text-offsets {:h 15 :v 100}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "As the World Bleeds"
+     :time {:start 327186 :end 330497}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start -1/2 :fade-in-end 0 :fade-in-easing 4 :fade-out-start 14/4 :fade-out-end 4 :fade-out-easing 3})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [320 256]
+     :text-offsets {:h 15 :v 50}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "I am the author\nof order and flow"
+     :time {:start 386772 :end 390083}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 1 :fade-out-easing 1})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [320 231]
+     :text-offsets {:h 15 :v 50}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "I am the Father of lights:"
+     :time {:start 390083 :end 393393}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 7/8 :fade-out-end 1 :fade-out-easing 1})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [320 281]
+     :text-offsets {:h 15 :v 50}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "watch me put on a show!"
+     :time {:start 391738 :end 393393}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 1})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [320 256]
+     :text-offsets {:h 15 :v 50}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "I am the seeker\nof all gone astray"
+     :time {:start 393393 :end 396703}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 1})]}
+  {:effect lyrics/create-text
+  	 :effect-parameters
+    {:position [320 256]
+     :text-offsets {:h 15 :v 50}
+     :align "Centre"
+     :tether "Centre"
+     :scale 0.25
+     :line "I am the keeper\nof souls till the end of all days"
+     :time {:start 396703 :end 400014}}
+    :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/8 :fade-in-easing 1 :fade-out-start 3/4 :fade-out-end 1 :fade-out-easing 1})]}
    ])
 
 (def particles
@@ -903,16 +1003,16 @@
      :coords [[-107 0] [747 520]]}
     :functions (conj
     													(mapv #(if (odd? %)
-    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1) :arguments [0 40]}) 
-    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1) :arguments [0 -40]}))
+    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1/2) :arguments [0 40]}) 
+    																								(partial move/move {:start (/ % 2) :easing 5 :end (+ (/ % 2) 1/2) :arguments [0 -40]}))
     																								(range 9))
     													(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1}))}])
 
 (defn main
   []
-  [hand-commands
-  	(effects/create-effects left-lines)
+  [(effects/create-effects left-lines)
   	(effects/create-effects right-lines)
   	(effects/create-effects center-lines)
    (effects/create-effects lyrics)
-   (effects/create-effects particles)])
+   (effects/create-effects particles)
+   hand-commands])

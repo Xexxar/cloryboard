@@ -4,6 +4,7 @@
             [clojure.set :as set]
             [clojure.string :as str]
             [cloryboard.effects.lyrics :as lyrics]
+            [cloryboard.effects.spectrum :as spectrum]
             [cloryboard.common.effects :as effects]
             [cloryboard.functions.move :as move]
             [cloryboard.functions.rotate :as rotate]
@@ -15,6 +16,19 @@
            [java.awt.image BufferedImage]
            [javax.imageio ImageIO]
            [java.io File]))
+
+(def spectrum
+  [{:effect spectrum/create-volume-effect
+  	 :effect-parameters 
+  	   {:image "sb/circle.png"
+  	    :scale 2
+  	   	; :image "sb/dot.png"
+  	    ; :scale 40
+  	    :easing 0
+  	    :position [320 170]
+  	    :fraction 1/580
+  	    :time {:start 193381 :end 232642 }}}])
+
 
 (def hand-commands
   [{:filepath "sb/alphabw/lightning1.png"
@@ -378,5 +392,6 @@
 
 (defn main
   []
-  [hand-commands
+  [(effects/create-effects spectrum)
+   hand-commands
    (effects/create-effects lines)])

@@ -7,6 +7,7 @@
             [cloryboard.common.effects :as effects]
             [cloryboard.functions.move :as move]
             [cloryboard.functions.rotate :as rotate]
+            [cloryboard.effects.spectrum :as spectrum]
             [cloryboard.functions.fade :as fade]
             [cloryboard.functions.restrictions :as restrict]
             [cloryboard.effects.particles :as particles]
@@ -15,6 +16,18 @@
            [java.awt.image BufferedImage]
            [javax.imageio ImageIO]
            [java.io File]))
+
+(def spectrum
+  [{:effect spectrum/create-volume-effect
+  	 :effect-parameters 
+  	   {:image "sb/circle.png"
+  	    :scale 2
+  	   	; :image "sb/dot.png"
+  	    ; :scale 40
+  	    :easing 0
+  	    :position [320 170]
+  	    :fraction 1/576
+  	    :time {:start 278625 :end 320566 }}}])
 
 (def hand-commands
   [{:filepath "sb/alphabw/lightning1.png",
@@ -374,9 +387,9 @@
      :tether "Centre"
      :line "I AM"
      :scale 0.3
-     :time {:start (+ 85244 230096) :end (+ 85244 232792)}}
-      :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/16 :fade-in-easing 0 :fade-out-start 16/8 :fade-out-end 16/8 :fade-out-easing 0})
-(partial move/move {:easing 17 :arguments [0 -60] :start 0 :end 9/8})]}])
+     :time {:start (+ 85244 230096) :end 320566}}
+      :functions [(partial fade/fade {:start 0 :end 1/24 :easing 0 :arguments [0 1]})
+(partial move/move {:easing 17 :arguments [0 -60] :start 0 :end 7/8})]}])
 
 
 ; (def particles
@@ -385,4 +398,5 @@
 (defn main
   []
   [hand-commands
+   (effects/create-effects spectrum)
    (effects/create-effects lines)])

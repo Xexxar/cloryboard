@@ -17,8 +17,7 @@
            [java.io File]))
 
 (def hand-commands
-  [
-  {:filepath "sb/background.png"
+  [{:filepath "sb/background.png"
      :type "Sprite"
      :layer "Background"
      :tether "Centre"
@@ -28,6 +27,16 @@
                   :easing 0,
                   :end 640173,
                   :arguments [0.6]}
+                 {:function "F",
+                  :start 259492,
+                  :easing 1,
+                  :end 259492,
+                  :arguments [1, 0]}
+                 {:function "F",
+                  :start 264292,
+                  :easing 17,
+                  :end 269092,
+                  :arguments [0, 1]}
                  {:function "F",
                   :start 315906,
                   :easing 17,
