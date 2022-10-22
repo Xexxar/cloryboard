@@ -193,6 +193,20 @@
               :end 67453,
               :arguments [1 0]}]}])
 
+(def particles
+  [{:effect particles/create-particle-routine
+    :effect-parameters
+    {:count 200
+     :scale-range [0.25 1]
+     :files ["sb/dot.png"]
+     :time  {:start 30253 :end 107053}
+     :movements [{:easing 0 :start 1/4 :end 3/4 :argument [0 -10000]}
+                 {:easing 0 :start 3/4 :end 1 :argument [0 1000]}]}
+    :functions []}])
+
+
 (defn main
   []
-  [hand-commands])
+  [
+   (effects/create-effects particles)
+   hand-commands])

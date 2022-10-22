@@ -1005,9 +1005,9 @@
 
 (defn main
   []
-  [(effects/create-effects left-lines)
+  [(effects/create-effects particles)
+   (effects/create-effects left-lines)
   	(effects/create-effects right-lines)
   	(effects/create-effects center-lines)
    (effects/create-effects lyrics)
-   (effects/create-effects particles)
    hand-commands])

@@ -1,5 +1,6 @@
 (ns cloryboard.effects.common
-  (:require [cloryboard.common.maths :as maths]))
+  (:require [cloryboard.common.maths :as maths]
+            [cloryboard.common.resolver :as resolver]))
 
 ;; Common functions used when generating an effect.
 
@@ -33,5 +34,20 @@
         (assoc-in [:position] new-position)))
     objects)))
 
-; (defn copy-effect-objects-at-time
-; 	)
+(defn copy-effect-objects-at-time
+  [objects time]
+  (mapv 
+    (fn [obj]
+      (-> obj
+        (assoc :position (resolver/get-current-effect-value obj time "M"))
+        (assoc :function (filterv #(not= "M" (get % :function)) (get obj :functions)))))
+    objects))
+
+; (defn get-last-state-of-effect
+;   [objects time]
+;   (mapv 
+;     (fn [obj]
+;       (-> obj
+;         (assoc :position (resolver/get-current-effect-value object time "M"))
+;         (assoc :function (filterv #(not= "M" (get % function)) (get obj :functions)))))
+;     objects))

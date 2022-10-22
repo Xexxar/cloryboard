@@ -23,7 +23,7 @@
   	   {:image "sb/circle.png"
   	    :scale 2
   	    :easing 0
-  	    :position [320 170]
+  	    :position [320 140]
   	    :fraction 1/640
   	    :time {:start 107053 :end 155053}}}])
 

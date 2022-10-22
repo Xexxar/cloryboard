@@ -85,13 +85,13 @@
   [box pos]
   (cond
     (<= (get pos 0) (get-in box [0 0])) ;; off on left side
-    		[(- 1 (get-in box [1 0])) (get pos 1)]
+    		[(+ (get-in box [1 0]) -1) (get pos 1)]
     (<= (get pos 1) (get-in box [0 1])) ;; above box
-    		[(get pos 0) (+ 1 (get-in box [1 1]))] 
+    		[(get pos 0) (+ (get-in box [1 1]) -1)] 
     (<= (get-in box [1 0]) (get pos 0)) ;; off on right side
-    		[(+ 1 (get-in box [0 0])) (get pos 1)]
+    		[(+ (get-in box [0 0]) 1) (get pos 1)]
     (<= (get-in box [1 1]) (get pos 1)) ;; below box
-    		[(get pos 0) (- 1 (get-in box [0 1]))]
+    		[(get pos 0) (+ (get-in box [0 1]) 1)]
       ))
 
 (defn get-particle-scale
@@ -161,7 +161,6 @@
         time (get parameters :time)
         movements (get parameters :movements)
         max-width (* (get scale-range 1) (image/get-max-width files))
-        _ (pp/pprint max-width)
         movement-borders [[(- -107 max-width) (- 0 max-width)] [(+ 747 max-width) (+ 480 max-width)]]
       	 particles (mapv #(assoc % :metadata (merge (get % :metadata) {:bypasses #{"M"}}))
       	 									 (generate-particles
