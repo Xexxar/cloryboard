@@ -6,12 +6,15 @@
 (defn scale
   "Applies a scales on each subobject."
   [parameters objects]
-  (common/apply-to-all-objects
+  (common/apply-to-objects-sequentially
+  (mapv (fn [object]
     [{:function "S"
     :start (get parameters :start)
     :end (get parameters :end)
     :easing (get parameters :easing)
-    :arguments [(get-in parameters [:arguments 0]) (get-in parameters [:arguments 1])]}
+    :arguments [(get-in (filterv #(= "S" (get % :function)) (get object :functions)) [0 :arguments 0]) (* (get-in (filterv #(= "S" (get % :function)) (get object :functions)) [0 :arguments 0])
+    																																		(get-in parameters [:arguments 0]))]}])
+    objects)
     objects))
 
 (defn scale-effect-from-position

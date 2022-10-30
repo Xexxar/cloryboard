@@ -4,30 +4,13 @@
             [clojure.set :as set]
             [clojure.string :as str]))
 
-; (defn convert-loop-to-output
-;   []
-;   (let [function (get functions index)]
-;     (if (nil? function)
-;       acc
-;       (convert-function-to-output functions (inc index)
-;         (str acc " "
-;           (str/join "," (reduce conj
-;                           [(get function :function)
-;                            (get function :easing)
-;                            (get function :start)
-;                            (get function :end)]
-;                           (get function :arguments)))
-;         "\n"))))))
-
-(defn convert-function-to-output
+(defn convert-loop-to-output
   [functions index acc]
   (let [function (get functions index)]
     (if (nil? function)
       acc
-      ; (if (= (get function :function) "L") ;;TODO I'm not ready to handle L or T functions!
-
-      (convert-function-to-output functions (inc index)
-        (str acc " "
+      (convert-loop-to-output functions (inc index)
+        (str acc "  "
           (str/join "," (reduce conj
                           [(get function :function)
                            (get function :easing)
@@ -35,6 +18,41 @@
                            (get function :end)]
                           (get function :arguments)))
         "\n")))))
+
+(defn convert-function-to-output
+  [functions index acc]
+  (let [function (get functions index)]
+    (if (nil? function)
+      acc
+      (cond
+        (= (get function :function) "L") ;;TODO I'm not ready to handle T functions!
+          (convert-function-to-output functions (inc index)
+            (str acc " "
+              (str/join "," [(get function :function)
+                               (get function :start)
+                               (get function :count)]) "\n"
+              (convert-loop-to-output (get function :arguments) 0 "")
+          ))
+        ; (= (get function :function) "T")
+        ;   (convert-function-to-output functions (inc index)
+        ;     (str acc " "
+        ;       (str/join "," (reduce conj
+        ;                       [(get function :function)
+        ;                        (get function :type)
+        ;                        (get function :start)
+        ;                        (get function :count)]
+        ;       (convert-loop-to-output (get function :arguments) 0 "")))
+        ;   "\n"))
+        :else
+        (convert-function-to-output functions (inc index)
+          (str acc " "
+            (str/join "," (reduce conj
+                            [(get function :function)
+                             (get function :easing)
+                             (get function :start)
+                             (get function :end)]
+                            (get function :arguments)))
+        "\n"))))))
 
 (defn convert-object-to-output
   [layer object]

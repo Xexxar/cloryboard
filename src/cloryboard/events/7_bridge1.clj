@@ -18,11 +18,11 @@
            [java.io File]))
 
 (def hand-commands
-	[{:filepath "sb/iamtri.png"
+	[{:filepath "sb/iamtricentered.png"
     :type "Sprite"
     :layer "Foreground"
     :tether "Centre"
-    :position [320 260]
+    :position [320 240]
     :functions [{:function "S"
     													:arguments [2 0.25]
     													:start 345393
@@ -741,7 +741,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -754,7 +754,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -767,7 +767,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -780,7 +780,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -793,7 +793,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -806,7 +806,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [500 110]
+    {:position [500 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -822,7 +822,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [140 110]
+    {:position [140 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -835,7 +835,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [140 110]
+    {:position [140 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -848,7 +848,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [140 110]
+    {:position [140 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -861,7 +861,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [140 110]
+    {:position [140 130]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -877,7 +877,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 420]
+    {:position [320 430]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -890,7 +890,7 @@
 		(fn [arg]
 		 {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 420]
+    {:position [320 430]
      :text-offsets {:h 15 :v 0}
      :align "Centre"
      :tether "Centre"
@@ -997,11 +997,39 @@
   [{:effect particles/create-particle-routine
     :effect-parameters
     {:count 200
-     :scale-range [0.25 1]
+     :scale-range [0.325 0.325]
      :files ["sb/dot.png"]
      :time  {:start 320566 :end 347048}
-     :movements [{:easing 0 :start 0 :end 4.5 :argument [5000 10000]}]}
-    :functions [(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1})]}])
+     :movements [{:easing 5 :start 1/8 :end 2/8 :arguments [0 10]}
+                 {:easing 5 :start 2/8 :end 3/8 :arguments [0 -10]}
+                 {:easing 5 :start 3/8 :end 4/8 :arguments [0 10]}
+                 {:easing 5 :start 4/8 :end 5/8 :arguments [0 -10]}
+                 {:easing 5 :start 5/8 :end 6/8 :arguments [0 10]}
+                 {:easing 5 :start 6/8 :end 7/8 :arguments [0 -10]}
+                 {:easing 5 :start 7/8 :end 8/8 :arguments [0 10]}
+                 {:easing 5 :start 8/8 :end 9/8 :arguments [0 10]}
+                 {:easing 5 :start 9/8 :end 10/8 :arguments [0 -10]}
+                 {:easing 5 :start 10/8 :end 11/8 :arguments [0 10]}
+                 {:easing 5 :start 11/8 :end 12/8 :arguments [0 -10]}
+                 {:easing 5 :start 12/8 :end 13/8 :arguments [0 10]}
+                 {:easing 5 :start 13/8 :end 14/8 :arguments [0 -10]}
+                 {:easing 5 :start 14/8 :end 15/8 :arguments [0 10]}
+                 {:easing 3 :start 15/8 :end 17/8 :arguments [500 -500]}
+                 {:easing 0 :start 17/8 :end 19/8 :arguments [1000 -1000]}
+                 {:easing 4 :start 19/8 :end 21/8 :arguments [500 -500]}
+                 {:easing 5 :start 21/8 :end 22/8 :arguments [0 10]}
+                 {:easing 5 :start 22/8 :end 23/8 :arguments [0 -10]}
+                 {:easing 3 :start 23/8 :end 25/8 :arguments [-500 -500]}
+                 {:easing 0 :start 25/8 :end 31/8 :arguments [-3000 -3000]}
+                 {:easing 4 :start 31/8 :end 32/8 :arguments [-250 -250]}
+                 {:easing 5 :start 32/8 :end 33/8 :arguments [0 10]}
+                 {:easing 5 :start 33/8 :end 34/8 :arguments [0 -10]}
+                 {:easing 5 :start 34/8 :end 35/8 :arguments [0 10]}
+                 {:easing 5 :start 35/8 :end 36/8 :arguments [0 -10]}]} ;; 0 0]} ;; 0 0
+    :functions [(partial fade/fade-if-start-time {:arguments [0 1] :cond-time 0 :start 1/8 :end 2/8 :easing 17})
+                (partial fade/fade-if-time {:arguments [1 0] :cond-time 36/8 :start 35/8 :end 36/8 :easing 17})]}])
+
+    ;[(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1})]}])
 
 (defn main
   []
