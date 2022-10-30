@@ -26,7 +26,8 @@
   	    :easing 0
   	    :position [320 170]
   	    :fraction 1/512
-  	    :time {:start 240292 :end 278625 }}}])
+  	    :time {:start 240292 :end 278625}}
+  	 :functions []}])
 
 (def lyrics
   [{:effect lyrics/create-text

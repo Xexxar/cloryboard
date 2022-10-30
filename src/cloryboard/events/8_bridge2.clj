@@ -17,12 +17,13 @@
            [javax.imageio ImageIO]
            [java.io File]))
 
+
 (def hand-commands
-	[{:filepath "sb/iamtri.png"
+	[{:filepath "sb/iamtricentered.png"
     :type "Sprite"
     :layer "Foreground"
     :tether "Centre"
-    :position [320 220]
+    :position [320 240]
     :functions [{:function "S"
     													:arguments [2 0.25]
     													:start 398359
@@ -32,32 +33,47 @@
     													:arguments [0.25]
     													:start 400014
     													:easing 1
+    												 :end 439738}
+    												{:function "F"
+    													:arguments [1 0]
+    													:start 438910
+    													:easing 17
     												 :end 439738}]}
   {:filepath "sb/i.png"
     :type "Sprite"
     :layer "Foreground"
     :tether "Centre"
-    :position [320 220]
+    :position [320 202]
     :functions [{:function "S"
     													:arguments [0.25]
     													:start 426083
     													:easing 1
+    												 :end 439738}
+    												{:function "F"
+    													:arguments [1 0]
+    													:start 438910
+    													:easing 17
     												 :end 439738}]}
   {:filepath "sb/am.png"
     :type "Sprite"
     :layer "Foreground"
     :tether "Centre"
-    :position [320 275]
+    :position [320 257]
     :functions [{:function "S"
     													:arguments [0.25]
     													:start 426497
     													:easing 1
+    												 :end 439738}
+    												{:function "F"
+    													:arguments [1 0]
+    													:start 438910
+    													:easing 17
     												 :end 439738}]}])
 
 (def lyrics
 	[{:effect lyrics/create-text
   	 :effect-parameters
-    {:position [510 176]
+    {:position [460 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -67,7 +83,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [130 176]
+    {:position [180 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -77,7 +93,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 400]
+    {:position [320 370]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -87,7 +103,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [510 176]
+    {:position [460 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -97,7 +113,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [130 176]
+    {:position [180 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -107,7 +123,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 400]
+    {:position [320 370]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -117,7 +133,7 @@
     :functions []}
    {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [510 176]
+    {:position [460 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -127,7 +143,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [130 176]
+    {:position [180 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -137,7 +153,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 400]
+    {:position [320 370]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -147,7 +163,7 @@
     :functions []}
    {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [510 196]
+    {:position [460 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -157,7 +173,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [130 196]
+    {:position [180 176]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -167,7 +183,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 400]
+    {:position [320 370]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -177,7 +193,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 210]
+    {:position [320 190]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -187,7 +203,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 250]
+    {:position [320 230]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"
@@ -197,7 +213,7 @@
     :functions []}
   {:effect lyrics/create-text
   	 :effect-parameters
-    {:position [320 290]
+    {:position [320 270]
      :text-offsets {:h 15 :v 25}
      :align "Centre"
      :tether "Centre"

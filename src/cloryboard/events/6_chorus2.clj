@@ -27,7 +27,8 @@
   	    :easing 0
   	    :position [320 170]
   	    :fraction 1/576
-  	    :time {:start 278625 :end 320566 }}}])
+  	    :time {:start 278625 :end 320566}}
+  	  :functions [(partial fade/fade {:start 8/9 :end 1 :easing 17 :arguments [1 0]})]}])
 
 (def hand-commands
   [{:filepath "sb/alphabw/lightning1.png",
