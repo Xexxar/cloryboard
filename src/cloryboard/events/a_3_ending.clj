@@ -32,8 +32,65 @@
                   :easing 7,
                   :end 601931,
                   :arguments [1 0]}
+                 {:function "P"
+                  :start 599345
+                  :easing 0
+                  :end 633735
+                  :arguments "A"}
+
+                 {:function "F", ;1
+                  :start 613827,
+                  :easing 7,
+                  :end 614215,
+                  :arguments [0.25 0]}
+
+                 {:function "F", ;2
+                  :start 614215,
+                  :easing 7,
+                  :end 614603,
+                  :arguments [0.25 0]}
+
+                 {:function "F", ;3
+                  :start 614603,
+                  :easing 7,
+                  :end 615379,
+                  :arguments [0.25 0]}
+
+
+                 {:function "F", ;5
+                  :start 615379,
+                  :easing 7,
+                  :end 617965,
+                  :arguments [0.25 0]}
+
+
+                 {:function "F", ;1
+                  :start 630379,
+                  :easing 7,
+                  :end 630767,
+                  :arguments [0.25 0]}
+
+                 {:function "F", ;2
+                  :start 630767,
+                  :easing 7,
+                  :end 631155,
+                  :arguments [0.25 0]}
+
+                 {:function "F", ;3
+                  :start 631155,
+                  :easing 7,
+                  :end 632448,
+                  :arguments [0.25 0]}
+
+
                  {:function "F",
-                  :start 632705,
+                  :start 632448,
+                  :easing 7,
+                  :end 633735,
+                  :arguments [0.5 0]}
+
+                 {:function "F",
+                  :start 633735,
                   :easing 3,
                   :end 640173,
                   :arguments [0 1]}

@@ -28,7 +28,12 @@
                   :start 474744,
                   :easing 7,
                   :end 476458,
-                  :arguments [1 0]}]}
+                  :arguments [1 0]}
+                 {:function "P"
+                  :start 474744
+                  :easing 0
+                  :end 476458
+                  :arguments "A"}]}
 	 {:filepath "sb/iamtricentered.png"
     :type "Sprite"
     :layer "Foreground"
@@ -378,7 +383,7 @@
     												             {:function "R"
     												              :start (- 481601 474744)
     												              :end (- 485029 474744)
-    												              :easing 5
+    												              :easing 5 
     												              :arguments [0 (/ Math/PI 12)]}
     												             {:function "R"
     												              :start (- 485029 474744)

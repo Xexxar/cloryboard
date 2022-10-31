@@ -29,6 +29,38 @@
   	    :time {:start 240292 :end 278625}}
   	 :functions []}])
 
+(def flash
+  [{:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 259492,
+                  :easing 7,
+                  :end 260392,
+                  :arguments [0.75 0]}
+                 {:function "F",
+                  :start 260392,
+                  :easing 7,
+                  :end 261892,
+                  :arguments [0.75 0]}
+                 {:function "F",
+                  :start 261892,
+                  :easing 7,
+                  :end 262792,
+                  :arguments [0.75 0]}
+                 {:function "F",
+                  :start 262792,
+                  :easing 7,
+                  :end 264292,
+                  :arguments [0.75 0]}
+                 {:function "P"
+                  :start 259492
+                  :easing 0
+                  :end 264292
+                  :arguments "A"}]}])
+
 (def lyrics
   [{:effect lyrics/create-text
 		:effect-parameters
@@ -129,5 +161,6 @@
 (defn main
   []
   [(effects/create-effects spectrum)
-   (effects/create-effects lyrics)]
+   (effects/create-effects lyrics)
+   flash]
 )

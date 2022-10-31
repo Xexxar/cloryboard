@@ -30,8 +30,25 @@
   	    :time {:start 278625 :end 320566}}
   	  :functions [(partial fade/fade {:start 8/9 :end 1 :easing 17 :arguments [1 0]})]}])
 
+(def flash
+  [{:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 278625,
+                  :easing 7,
+                  :end 280955,
+                  :arguments [0.75 0]}
+                 {:function "P"
+                  :start 278625
+                  :easing 0
+                  :end 280955
+                  :arguments "A"}]}])
+
 (def hand-commands
-  [{:filepath "sb/alphabw/lightning1.png",
+  [{:filepath "sb/lightning1.png",
   :type "Sprite",
   :layer "Foreground",
   :tether "Centre",
@@ -52,7 +69,7 @@
     :easing 0,
     :end 315046,
     :arguments [1 0]}]}
- {:filepath "sb/alphabw/lightning4.png",
+ {:filepath "sb/lightning4.png",
   :type "Sprite",
   :layer "Foreground",
   :tether "Centre",
@@ -398,6 +415,7 @@
 
 (defn main
   []
-  [hand-commands
-   (effects/create-effects spectrum)
-   (effects/create-effects lines)])
+  [(effects/create-effects spectrum)
+   hand-commands
+   (effects/create-effects lines)
+   flash])
