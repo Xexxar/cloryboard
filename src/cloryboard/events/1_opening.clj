@@ -31,7 +31,42 @@
                   :start 315906,
                   :easing 17,
                   :end 320566,
-                  :arguments [1, 0]}]}
+                  :arguments [1, 0]}]}   
+    {:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 47053,
+                  :easing 7,
+                  :end 47503,
+                  :arguments [0.25 0]}
+                 {:function "F",
+                  :start 47503,
+                  :easing 7,
+                  :end 47953,
+                  :arguments [0.25 0]}
+                 {:function "F",
+                  :start 47953,
+                  :easing 7,
+                  :end 48403,
+                  :arguments [0.25 0]}
+                 {:function "F",
+                  :start 48403,
+                  :easing 6,
+                  :end 49453,
+                  :arguments [0 0.5]}
+                 {:function "F",
+                  :start 49453,
+                  :easing 7,
+                  :end 51553,
+                  :arguments [0.5 0]}
+                 {:function "P"
+                  :start 47053
+                  :easing 0
+                  :end 51553
+                  :arguments "A"}]}
   {:filepath "sb/white.jpg"
      :type "Sprite"
      :layer "Foreground"
@@ -41,7 +76,12 @@
                   :start 30253,
                   :easing 7,
                   :end 32653,
-                  :arguments [1 0]}]}
+                  :arguments [1 0]}
+                 {:function "P"
+                  :start 30253
+                  :easing 0
+                  :end 32653
+                  :arguments "A"}]}
   {:filepath "sb/lightning1.png"
    :type "Sprite"
    :layer "Background"

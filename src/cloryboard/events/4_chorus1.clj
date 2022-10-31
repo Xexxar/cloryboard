@@ -30,8 +30,25 @@
   	    :time {:start 193381 :end 232642 }}}])
 
 
+(def flash
+  [{:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 193381,
+                  :easing 7,
+                  :end 195711,
+                  :arguments [0.75 0]}
+                 {:function "P"
+                  :start 193381
+                  :easing 0
+                  :end 195711
+                  :arguments "A"}]}])
+
 (def hand-commands
-  [{:filepath "sb/alphabw/lightning1.png"
+  [{:filepath "sb/lightning1.png"
    :type "Sprite"
    :layer "Foreground"
    :tether "Centre"
@@ -51,7 +68,7 @@
                 :easing 0,
                 :end 229802,
                 :arguments [1 0]}]}
-  {:filepath "sb/alphabw/lightning4.png"
+  {:filepath "sb/lightning4.png"
    :type "Sprite"
    :layer "Foreground"
    :tether "Centre"
@@ -394,4 +411,5 @@
   []
   [(effects/create-effects spectrum)
    hand-commands
-   (effects/create-effects lines)])
+   (effects/create-effects lines)
+   flash])

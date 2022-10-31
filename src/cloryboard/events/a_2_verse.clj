@@ -294,7 +294,12 @@
                   :start 562331,
                   :easing 7,
                   :end 564369,
-                  :arguments [1 0]}]}
+                  :arguments [1 0]}
+                 {:function "P"
+                  :start 562331
+                  :easing 0
+                  :end 564369
+                  :arguments "A"}]}
    {:filepath "sb/white.jpg"
     :type "Sprite"
     :layer "Foreground"

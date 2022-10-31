@@ -17,6 +17,28 @@
            [javax.imageio ImageIO]
            [java.io File]))
 
+(def flash
+  [{:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 373531,
+                  :easing 7,
+                  :end 374359,
+                  :arguments [0.5 0]}
+                 {:function "F",
+                  :start 380152,
+                  :easing 7,
+                  :end 380979 ,
+                  :arguments [0.5 0]}
+                 {:function "P"
+                  :start 373531
+                  :easing 0
+                  :end 380979
+                  :arguments "A"}]}])
+
 (def hand-commands
 	[{:filepath "sb/iamtricentered.png"
     :type "Sprite"
@@ -904,11 +926,11 @@
 	[{:effect lyrics/create-text
   	 :effect-parameters
     {:position [320 256]
-     :text-offsets {:h 15 :v 100}
+     :text-offsets {:h 15 :v 50}
      :align "Centre"
      :tether "Centre"
      :scale 0.15
-     :line "Wherefore it is written,\n\"God opposes the proud but gives grace to the humble.\"\nJames 4:6"
+     :line "Wherefore it is written,\n\"God opposes the proud but gives grace to the humble.\"\n\nJames 4:6"
      :time {:start 320566 :end 323876}}
     :functions [(partial fade/fade-in-and-out {:fade-in-start 0 :fade-in-end 1/2 :fade-in-easing 1 :fade-out-start 1/1 :fade-out-end 3/2 :fade-out-easing 1})]}
   {:effect lyrics/create-text
@@ -1024,10 +1046,15 @@
                  {:easing 4 :start 31/8 :end 32/8 :arguments [-250 -250]}
                  {:easing 5 :start 32/8 :end 33/8 :arguments [0 10]}
                  {:easing 5 :start 33/8 :end 34/8 :arguments [0 -10]}
-                 {:easing 5 :start 34/8 :end 35/8 :arguments [0 10]}
-                 {:easing 5 :start 35/8 :end 36/8 :arguments [0 -10]}]} ;; 0 0]} ;; 0 0
+
+                 {:easing 0 :start 34/8 :end 36/8 :arguments [0 -2000]}
+                 ; {:easing 4 :start 35/8 :end 36/8 :arguments [0 -250]}
+
+                 ; {:easing 5 :start 34/8 :end 35/8 :arguments [0 10]}
+                 ; {:easing 5 :start 35/8 :end 36/8 :arguments [0 -10]}
+                 ]} ;; 0 0]} ;; 0 0
     :functions [(partial fade/fade-if-start-time {:arguments [0 1] :cond-time 0 :start 1/8 :end 2/8 :easing 17})
-                (partial fade/fade-if-time {:arguments [1 0] :cond-time 36/8 :start 35/8 :end 36/8 :easing 17})]}])
+                (partial fade/fade-if-time {:arguments [1 0] :cond-time 34/8 :start 71/16  :end 36/8 :easing 17})]}])
 
     ;[(partial fade/fade-in-and-out {:fade-in-start 1/8 :fade-in-end 1/4 :fade-in-easing 1 :fade-out-start 71/16 :fade-out-end 72/16 :fade-out-easing 1})]}])
 
@@ -1038,4 +1065,5 @@
   	(effects/create-effects right-lines)
   	(effects/create-effects center-lines)
    (effects/create-effects lyrics)
-   hand-commands])
+   hand-commands
+   flash])

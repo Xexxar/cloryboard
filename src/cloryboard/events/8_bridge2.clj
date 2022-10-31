@@ -17,6 +17,47 @@
            [javax.imageio ImageIO]
            [java.io File]))
 
+(def flash
+  [{:filepath "sb/white.jpg"
+     :type "Sprite"
+     :layer "Foreground"
+     :tether "Centre"
+     :position [320 240]
+     :functions [{:function "F",
+                  :start 400014,
+                  :easing 7,
+                  :end 400841,
+                  :arguments [0.5 0]} ;1
+                 {:function "P"
+                  :start 400014
+                  :easing 0
+                  :end 433945
+                  :arguments "A"}
+                 {:function "F",
+                  :start 406634,
+                  :easing 7,
+                  :end 407462,
+                  :arguments [0.5 0]} ;2
+                 {:function "F",
+                  :start 413255,
+                  :easing 7,
+                  :end 414083,
+                  :arguments [0.5 0]} ;3
+                 {:function "F",
+                  :start 419876,
+                  :easing 7,
+                  :end 420703,
+                  :arguments [0.5 0]} ;3
+                 {:function "F",
+                  :start 426497,
+                  :easing 7,
+                  :end 427324,
+                  :arguments [0.5 0]} ;4
+                 {:function "F",
+                  :start 433117,
+                  :easing 7,
+                  :end 433945,
+                  :arguments [0.5 0]}]}])
 
 (def hand-commands
 	[{:filepath "sb/iamtricentered.png"
@@ -36,7 +77,7 @@
     												 :end 439738}
     												{:function "F"
     													:arguments [1 0]
-    													:start 438910
+    													:start 438083
     													:easing 17
     												 :end 439738}]}
   {:filepath "sb/i.png"
@@ -51,7 +92,7 @@
     												 :end 439738}
     												{:function "F"
     													:arguments [1 0]
-    													:start 438910
+    													:start 438083
     													:easing 17
     												 :end 439738}]}
   {:filepath "sb/am.png"
@@ -66,7 +107,7 @@
     												 :end 439738}
     												{:function "F"
     													:arguments [1 0]
-    													:start 438910
+    													:start 438083
     													:easing 17
     												 :end 439738}]}])
 
@@ -226,4 +267,5 @@
 (defn main
   []
   [hand-commands
-   (effects/create-effects lyrics)])
+   (effects/create-effects lyrics)
+   flash])
